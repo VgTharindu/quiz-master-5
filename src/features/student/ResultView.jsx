@@ -1,15 +1,24 @@
 import { useEffect, useState } from "react";
-import { sb } from "@/lib/supabase";
+import { isNetworkError, rpc } from "@/lib/rpc";
 import Loading from "@/components/Loading";
+import RetryMessage from "@/components/RetryMessage";
 
 // පරීක්ෂණයේ ප්‍රතිඵලය: ලකුණු, ස්ථානය සහ එක් එක් ප්‍රශ්නයේ නිවැරදි පිළිතුර
 export default function ResultView({ aid, back }) {
   const [result, setResult] = useState(null);
-  useEffect(() => {
-    sb.rpc("get_result", { aid }).then(({ data, error }) =>
-      error ? (alert("ප්‍රතිඵල තවම නැත"), back()) : setResult(data),
-    );
-  }, [aid]);
+  const [netError, setNetError] = useState(false);
+  const load = () => {
+    setNetError(false);
+    rpc("get_result", { aid }, { retries: 4 }).then((res) => {
+      if (!res.error) return setResult(res.data);
+      // network ගැටලුවක් නම් නැවත උත්සාහ කරන්න බොත්තමක්, නැත්නම් (උදා: පරීක්ෂණය තවම ඉවර නැහැ) කලින් වගේම
+      if (isNetworkError(res)) return setNetError(true);
+      alert("ප්‍රතිඵල තවම නැත");
+      back();
+    });
+  };
+  useEffect(load, [aid]);
+  if (netError) return <RetryMessage onRetry={load} />;
   if (!result) return <Loading />;
   return (
     <div className="wrap">

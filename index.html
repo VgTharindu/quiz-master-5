@@ -1,8 +1,37 @@
-<!doctype html><html lang="si"><head><meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>QUIZ MASTER 5 | Grade 5 Scholarship Learning Platform</title>
-<meta name="description" content="චාමර සර්ගේ 5 වසර ශිෂ්‍යත්ව පන්තියේ online අභ්‍යාස පරීක්ෂණ"/>
-<meta name="theme-color" content="#1A4BAE"/>
-<link rel="icon" type="image/svg+xml" href="/favicon.svg"/>
-<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700&family=Gemunu+Libre:wght@600;800&family=Noto+Sans+Sinhala:wght@400;600;700&display=swap" rel="stylesheet"/>
-</head><body><div id="root"></div><script type="module" src="/src/main.jsx"></script></body></html>
+<!doctype html>
+<html lang="si">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>QUIZ MASTER 5 | Grade 5 Scholarship Learning Platform</title>
+    <meta name="description" content="චාමර සර්ගේ 5 වසර ශිෂ්‍යත්ව පන්තියේ online අභ්‍යාස පරීක්ෂණ" />
+    <meta name="theme-color" content="#1A4BAE" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <!-- Supabase සහ Google Fonts servers වලට කලින්ම සම්බන්ධ වෙනවා (DNS + TLS).
+         Slow network එකේ පළමු request එකට ගතවෙන කාලය අඩු වෙනවා.
+         %VITE_SUPABASE_URL% එක build වෙද්දී Vite එක .env එකේ අගයෙන් මාරු කරනවා -->
+    <link rel="preconnect" href="%VITE_SUPABASE_URL%" crossorigin />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <!-- Fonts load වෙනකම් පිටුව පෙන්වීම නවත්වන්නේ නැහැ (non-blocking).
+         Font එක එනකම් phone එකේ තියෙන font එකෙන් පෙන්වලා, ආවම මාරු කරනවා (display=swap) -->
+    <link
+      rel="preload"
+      as="style"
+      href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700&family=Gemunu+Libre:wght@600;800&family=Noto+Sans+Sinhala:wght@400;600;700&display=swap"
+      onload="this.onload=null;this.rel='stylesheet'"
+    />
+    <noscript>
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700&family=Gemunu+Libre:wght@600;800&family=Noto+Sans+Sinhala:wght@400;600;700&display=swap"
+      />
+    </noscript>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
