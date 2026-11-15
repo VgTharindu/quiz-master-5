@@ -1,7 +1,6 @@
 import { exportExcel } from "@/utils/excel";
 import { formatDuration } from "@/utils/format";
 
-// ප්‍රතිඵල tab එක: ලකුණු අනුව ළමුන්ගේ ලැයිස්තුව සහ Excel export එක
 export default function ResultsTab({ test, rows, totalMarks, questionCount }) {
   if (!rows.length) return <p>තවම කිසිවෙක් සහභාගී වී නැත.</p>;
 

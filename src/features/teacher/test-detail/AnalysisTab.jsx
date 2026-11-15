@@ -1,4 +1,3 @@
-// විශ්ලේෂණ tab එක: සාරාංශ අගයන් 4 සහ ප්‍රශ්න අනුව නිවැරදි ප්‍රතිශතය
 export default function AnalysisTab({ rows, questions, attempts }) {
   if (!rows.length) return <p>දත්ත නැත.</p>;
   const scores = rows.map((r) => r.ලකුණු);
@@ -31,7 +30,6 @@ export default function AnalysisTab({ rows, questions, attempts }) {
               <div
                 style={{
                   width: pc + "%",
-                  // 70%+ කොළ, 40%+ කහ, අඩු නම් රතු
                   background: pc >= 70 ? "#16a34a" : pc >= 40 ? "#facc15" : "#dc2626",
                 }}
               />

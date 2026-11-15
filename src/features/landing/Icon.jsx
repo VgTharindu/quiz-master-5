@@ -1,4 +1,3 @@
-// සරල SVG icons. name එක අනුව අදාළ path එක ඇඳෙනවා
 export default function Icon({ name }) {
   const P = {
     clock: (

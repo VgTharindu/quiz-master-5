@@ -1,6 +1,5 @@
 import { useOnline } from "@/hooks/useOnline";
 
-// internet නැති වුණාම තිරයේ උඩම පෙනෙන තැඹිලි තීරුව
 export default function NetworkBanner() {
   const online = useOnline();
   if (online) return null;

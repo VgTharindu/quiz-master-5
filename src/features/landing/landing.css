@@ -1,19 +1,18 @@
-/* QUIZ MASTER 5 home page. Mobile-first: මුලින්ම phone එකට ලියලා, පස්සේ ලොකු screen වලට වෙනස් කරනවා.
-   සියල්ල .qm ඇතුළේ තියෙන නිසා අනෙක් පිටුවලට බලපාන්නේ නැහැ */
+/* Mobile-first. Everything is scoped under .qm so these styles never leak into other pages. */
 .qm {
-  --blue: #1a4bae; /* logo එකේ නිල් */
-  --navy: #123a8c; /* තද නිල් */
-  --orange: #f7931e; /* logo එකේ තැඹිලි */
-  --leaf: #1f9d55; /* නිවැරදි */
-  --red: #d7263d; /* වැරදි */
-  --line: #d3e1f6; /* අභ්‍යාස පොතේ ඉරි */
+  --blue: #1a4bae;
+  --navy: #123a8c;
+  --orange: #f7931e;
+  --leaf: #1f9d55;
+  --red: #d7263d;
+  --line: #d3e1f6;
   --text: #1e2440;
   --brand: "Fredoka", "Noto Sans Sinhala", sans-serif;
   --display: "Gemunu Libre", "Noto Sans Sinhala", sans-serif;
   background: #eef4fc;
   color: var(--text);
   min-height: 100vh;
-  padding-bottom: 88px; /* පහළ බොත්තමට ඉඩ */
+  padding-bottom: 88px; /* room for the fixed bottom CTA */
   overflow-x: hidden;
 }
 .qm h1,
@@ -36,7 +35,6 @@
   outline-offset: 3px;
 }
 
-/* ඉහළ තීරුව */
 .qm-top {
   display: flex;
   justify-content: space-between;
@@ -71,9 +69,8 @@
   gap: 24px;
 }
 .qm-hero > *:not(.qm-doodles) {
-  position: relative; /* doodles වලට උඩින් පෙනෙන්න */
+  position: relative; /* stay above the doodles */
 }
-/* පසුබිමේ පාවෙන ගණිත සලකුණු */
 .qm-doodles {
   position: absolute;
   inset: 0;
@@ -90,7 +87,6 @@
 .qm-doodles span:nth-child(even) {
   color: rgba(247, 147, 30, 0.22);
 }
-/* logo එක පිටුපස තියෙන මෘදු කහ හැඩය */
 .qm-logo-blob {
   display: inline-grid;
   place-items: center;
@@ -142,12 +138,11 @@
 .qm .qm-full {
   margin-top: 6px;
 }
-/* phone එකේ පහළ බොත්තම තියෙන නිසා hero බොත්තම desktop එකේ පමණයි */
+/* Mobile uses the fixed dock CTA instead. */
 .qm .qm-hero-cta {
   display: none;
 }
 
-/* නියැදි ප්‍රශ්නය: අභ්‍යාස පොතක ඉරි සහ රතු margin ඉර */
 .qm-paper {
   background-color: #fff;
   background-image:
@@ -197,7 +192,7 @@
   opacity: 1;
   cursor: default;
 }
-/* MCQ කවය: තෝරාගත් විට පැන්සලෙන් පාට කළා වගේ පිරෙනවා */
+/* The bubble fills like a pencil-shaded answer when selected. */
 .qm-bubble i {
   flex: 0 0 32px;
   height: 32px;
@@ -229,7 +224,7 @@
   20%, 60% { transform: translateX(-6px); }
   40%, 80% { transform: translateX(6px); }
 }
-/* නිවැරදි පිළිතුරට තරු විසිරීම: හැම තරුවක්ම --a කෝණයට පිටතට යනවා */
+/* Each star flies outward along its own --a angle. */
 .qm-burst {
   position: absolute;
   left: 50%;
@@ -262,11 +257,9 @@
   line-height: 0;
 }
 
-/* Features ලැයිස්තුව සහ සර්ගේ කොටස */
 .qm-block {
   padding: 0 16px 36px;
 }
-/* "QUIZ MASTER 5 මගින්" ප්‍රයෝජන කාඩ් */
 .qm-title {
   font-size: 28px;
   text-align: center;
@@ -307,7 +300,6 @@
   border-radius: 16px;
 }
 
-/* පියවර 3: ඇත්තටම අනුපිළිවෙළක් නිසා අංක යොදනවා */
 .qm-steps {
   background: var(--navy);
   color: #fff;
@@ -354,7 +346,6 @@
   opacity: 0.85;
 }
 
-/* චාමර සර් */
 .qm-sir {
   background: #fff;
   border-radius: 24px;
@@ -414,7 +405,7 @@
   text-align: center;
 }
 
-/* Phone එකේ පහළට ඇලී තියෙන බොත්තම */
+/* Fixed CTA, mobile only */
 .qm-dock {
   position: fixed;
   left: 0;
@@ -427,7 +418,6 @@
   border-top: 1px solid var(--line);
 }
 
-/* ලොකු phone (420px+) */
 @media (min-width: 420px) {
   .qm-paper {
     padding-left: 48px;
@@ -442,7 +432,7 @@
   }
 }
 
-/* Tablet සහ computer (860px+) */
+/* Tablet and desktop */
 @media (min-width: 860px) {
   .qm {
     padding-bottom: 0;
@@ -493,7 +483,7 @@
     align-items: flex-start;
   }
   .qm-steps {
-    /* අන්තර්ගතය 1080px පළලට මැදට ගන්න දෙපැත්තේ padding ගණනය කරනවා */
+    /* Centre content at 1080px while the background stays full width. */
     padding: 52px max(48px, calc((100% - 1032px) / 2));
     margin-bottom: 56px;
   }

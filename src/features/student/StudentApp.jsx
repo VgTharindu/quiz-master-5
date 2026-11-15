@@ -5,7 +5,6 @@ import TestRunner from "./TestRunner";
 import ResultView from "./ResultView";
 import { clearStudent, loadStudent, saveStudent } from "./studentStorage";
 
-// ළමයාගේ පැත්ත: login → home → test → result අතර මාරු කරන component එක
 export default function StudentApp({ exit }) {
   const [me, setMe] = useState(loadStudent);
   // view.page = "home" | "test" | "result", view.aid = attempt id

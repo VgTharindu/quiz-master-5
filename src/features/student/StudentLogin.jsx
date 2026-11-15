@@ -3,7 +3,6 @@ import Logo from "@/components/Logo";
 import BackButton from "@/components/BackButton";
 import { GRADES } from "@/constants/grades";
 
-// නම සහ පන්තිය ඇතුළත් කරන පිටුව
 export default function StudentLogin({ done, exit }) {
   const [name, setName] = useState("");
   const [grade, setGrade] = useState(0);

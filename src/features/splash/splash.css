@@ -1,11 +1,5 @@
-/* Loading animation (splash screen). කාල රේඛාව:
-   0.0s  සුදු රවුම මතුවෙනවා
-   0.4s  "5" ඉලක්කම ඇඳෙනවා
-   1.5s  තොප්පිය උඩ ඉඳන් වැටිලා පනිනවා
-   2.2s  ✓ කවය මතුවෙලා ✓ ලකුණ ඇඳෙනවා
-   2.7s  "QUIZ MASTER" අකුරෙන් අකුර උඩට එනවා, අන්තිමට "5" පනිනවා
-   3.9s  tagline එක මතුවෙනවා
-   4.5s  මුළු තිරයම උඩට ගිහින් home page එක පෙනෙනවා (5.0s වෙද්දී අවසන්) */
+/* Splash timeline: 0.0s ring pops in, 0.4s "5" draws, 1.5s cap drops, 2.2s check badge,
+   2.7s name letters rise, 3.9s tagline, 4.5s slide up (gone at 5.0s). */
 .qm-splash {
   position: fixed;
   inset: 0;
@@ -29,7 +23,6 @@
   }
 }
 
-/* logo එක තියෙන සුදු රවුම */
 .sp-ring {
   width: 200px;
   height: 200px;
@@ -47,7 +40,7 @@
   }
 }
 
-/* "5" ඇඳීම: dasharray 1 = ඉරේ මුළු දිග. dashoffset 1 සිට 0 දක්වා අඩු වෙද්දී ඉර ටිකෙන් ටික පෙනෙනවා */
+/* dasharray 1 = full path length; animating dashoffset 1 -> 0 draws the stroke. */
 .qm-splash .lg-five-out,
 .qm-splash .lg-five {
   stroke-dasharray: 1;
@@ -63,7 +56,6 @@
   }
 }
 
-/* තොප්පිය වැටීම */
 .qm-splash .lg-cap {
   transform-box: fill-box;
   transform-origin: center;
@@ -81,7 +73,7 @@
   }
 }
 
-/* ✓ කවය: transform-box නිසා කවය තමන්ගේම මැද සිට විශාල වෙනවා */
+/* transform-box: fill-box scales the badge from its own centre, not the SVG origin. */
 .qm-splash .lg-check {
   transform-box: fill-box;
   transform-origin: center;
@@ -99,7 +91,6 @@
   }
 }
 
-/* නම: හැම අකුරකටම --i අංකය අනුව ටිකක් පරක්කු වෙලා උඩට එනවා */
 .sp-name {
   margin: 0;
   font-family: "Fredoka", "Noto Sans Sinhala", sans-serif;
@@ -109,6 +100,7 @@
   color: #fff;
   letter-spacing: 0.02em;
 }
+/* Each letter is delayed by its --i index. */
 .sp-name span,
 .sp-name em {
   display: inline-block;
@@ -163,7 +155,6 @@
   }
 }
 
-/* පහළ load වෙන තීරුව: තත්පර 4.5කින් වමේ සිට දකුණට පිරෙනවා */
 .sp-bar {
   position: absolute;
   bottom: calc(40px + env(safe-area-inset-bottom));
@@ -188,7 +179,6 @@
   }
 }
 
-/* Animations අඩු කරන්න settings දාපු අයට සියල්ල එවෙලේම පෙන්වනවා */
 @media (prefers-reduced-motion: reduce) {
   .qm-splash *,
   .qm-splash.out {

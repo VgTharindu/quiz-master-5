@@ -1,4 +1,4 @@
-// upload කරන්න කලින් පින්තූරය උපරිම 800px සහ JPEG 70% quality එකට කුඩා කරනවා
+// Downscale to 800px and re-encode as JPEG so uploads stay small for students on mobile data.
 export async function compressImage(file, max = 800) {
   const bm = await createImageBitmap(file),
     r = Math.min(1, max / Math.max(bm.width, bm.height));

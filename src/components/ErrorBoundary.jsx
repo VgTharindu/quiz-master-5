@@ -1,8 +1,7 @@
 import { Component } from "react";
 
-// app එකේ කොටසක් load වෙන්න බැරි වුණොත් (උදා: internet නැති වුණොත්) හිස් සුදු තිරයක් වෙනුවට
-// පණිවිඩයක් සහ "නැවත උත්සාහ කරන්න" බොත්තමක් පෙන්වනවා.
-// Error boundaries හදන්න පුළුවන් class component එකකින් විතරයි
+// Catches failed lazy-chunk loads (e.g. when offline) and offers a reload instead of a blank screen.
+// Error boundaries can only be class components.
 export default class ErrorBoundary extends Component {
   state = { failed: false };
 

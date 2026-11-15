@@ -5,13 +5,12 @@ import { MONTHS } from "@/utils/format";
 import { calcScore } from "@/utils/score";
 import { exportExcel } from "@/utils/excel";
 
-// තෝරපු මාසයේ සහ පන්තියේ ළමුන්ගේ සාමාන්‍ය ලකුණු ලැයිස්තුව
 export default function MonthlyReport() {
   const now = new Date();
   const [grade, setGrade] = useState(5);
   const [year, setYear] = useState(now.getFullYear());
   const [month, setMonth] = useState(now.getMonth());
-  const [rows, setRows] = useState(null); // null = තාම ගත්තේ නැහැ
+  const [rows, setRows] = useState(null);
 
   async function load() {
     const from = new Date(year, month, 1),
@@ -28,7 +27,7 @@ export default function MonthlyReport() {
       sb.from("attempts").select("*").in("test_id", ids),
       sb.from("questions").select("*").in("test_id", ids),
     ]);
-    // ළමයාගේ නම (simple අකුරෙන්) key එක ලෙස අරන් ලකුණු එකතු කරනවා
+    // Students are identified by name only, so group by the lower-cased name.
     const byStudent = {};
     attempts.data.forEach((r) => {
       const k = r.student.toLowerCase();

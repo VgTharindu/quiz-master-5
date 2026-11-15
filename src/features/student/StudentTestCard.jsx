@@ -1,7 +1,6 @@
 import { formatCountdown, formatDateTime } from "@/utils/format";
 import { ENDED, LIVE, UPCOMING, getTestStatus } from "@/constants/testStatus";
 
-// ළමයාගේ ලැයිස්තුවේ එක් පරීක්ෂණයක කාඩ් එක
 export default function StudentTestCard({ test, now, onOpen }) {
   const start = new Date(test.start_at),
     end = new Date(test.end_at),

@@ -8,15 +8,12 @@
     <meta name="theme-color" content="#1A4BAE" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 
-    <!-- Supabase සහ Google Fonts servers වලට කලින්ම සම්බන්ධ වෙනවා (DNS + TLS).
-         Slow network එකේ පළමු request එකට ගතවෙන කාලය අඩු වෙනවා.
-         %VITE_SUPABASE_URL% එක build වෙද්දී Vite එක .env එකේ අගයෙන් මාරු කරනවා -->
+    <!-- Open connections early to cut latency on slow networks. Vite replaces %VITE_SUPABASE_URL% at build time. -->
     <link rel="preconnect" href="%VITE_SUPABASE_URL%" crossorigin />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
-    <!-- Fonts load වෙනකම් පිටුව පෙන්වීම නවත්වන්නේ නැහැ (non-blocking).
-         Font එක එනකම් phone එකේ තියෙන font එකෙන් පෙන්වලා, ආවම මාරු කරනවා (display=swap) -->
+    <!-- Non-blocking font load: render with system fonts first, then swap (display=swap). -->
     <link
       rel="preload"
       as="style"
