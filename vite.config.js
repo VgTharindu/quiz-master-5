@@ -1,3 +1,11 @@
-import {defineConfig} from 'vite'
-import react from '@vitejs/plugin-react'
-export default defineConfig({plugins:[react()]})
+import { fileURLToPath, URL } from "node:url";
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+
+export default defineConfig({
+  plugins: [react()],
+  resolve: {
+    // "@" කියන්නේ src folder එක. "../../lib/supabase" වෙනුවට "@/lib/supabase" ලියන්න පුළුවන්
+    alias: { "@": fileURLToPath(new URL("./src", import.meta.url)) },
+  },
+});
