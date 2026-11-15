@@ -96,7 +96,6 @@ export default function Landing({ onStudent, onTeacher }) {
         <span>චාමර සර්ගේ 5 වසර ශිෂ්‍යත්ව පන්තිය</span>
       </footer>
 
-      {/* Phone එකේ පමණක් පෙනෙන, පහළට ඇලී තියෙන බොත්තම */}
       <div className="qm-dock">
         <button className="qm-main" onClick={onStudent}>
           පරීක්ෂණයට යන්න

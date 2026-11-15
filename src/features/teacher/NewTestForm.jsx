@@ -2,7 +2,6 @@ import { useState } from "react";
 import { sb } from "@/lib/supabase";
 import GradeSelect from "@/components/GradeSelect";
 
-// නව පරීක්ෂණයක් schedule කරන form එක
 export default function NewTestForm({ done }) {
   const [form, setForm] = useState({ grade: 5, name: "", start: "", end: "" });
   const set = (field) => (value) => setForm({ ...form, [field]: value });

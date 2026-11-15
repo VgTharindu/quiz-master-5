@@ -11,7 +11,6 @@ import QuestionsTab from "./QuestionsTab";
 import ResultsTab from "./ResultsTab";
 import AnalysisTab from "./AnalysisTab";
 
-// එක් පරීක්ෂණයක විස්තර පිටුව: ප්‍රශ්න / ප්‍රතිඵල / විශ්ලේෂණය tabs තුන
 export default function TestDetail({ test, back }) {
   const status = getTestStatus(test);
   const [tab, setTab] = useState(status === ENDED ? 1 : 0);
@@ -38,7 +37,7 @@ export default function TestDetail({ test, back }) {
 
   const totalMarks = questions.reduce((s, q) => s + q.marks, 0),
     end = new Date(test.end_at);
-  // හැම ළමයෙක්ටම ලකුණු සහ ගත කළ කාලය (තත්පර). ඉවර කරලා නැත්නම් දැනට හෝ test එක ඉවර වෙන වෙලාවට ගණන් කරනවා
+  // Unfinished attempts are timed up to now, or up to the test end if it has passed.
   const rows = attempts
     .map((r) => {
       const sec =
@@ -73,7 +72,7 @@ export default function TestDetail({ test, back }) {
           active={tab}
           onChange={(i) => {
             setTab(i);
-            loadAttempts(); // tab මාරු කරන හැම වෙලාවකම අලුත්ම ප්‍රතිඵල ගන්නවා
+            loadAttempts(); // fetch fresh results on every tab switch
           }}
         />
         {tab === 0 && (

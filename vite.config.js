@@ -2,10 +2,9 @@ import { fileURLToPath, URL } from "node:url";
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 
-// කලින් login වෙච්ච ළමයෙක් app එක open කරද්දී, ළමයාගේ පැත්තේ JS කොටස් ප්‍රධාන file එකත් එක්කම
-// එකවර download වෙන්න index.html එකට කුඩා script එකක් දානවා. නැත්නම් ප්‍රධාන file එක run වුණාට පස්සේ
-// තමයි ඒවා ඉල්ලන්නේ, slow network එකක ඒකට අමතර round trip එකක් (තත්පර 1-2ක්) යනවා.
-// අලුතෙන් එන කෙනෙක්ට (localStorage එකේ "me" නැති) මේ script එක කිසිවක් කරන්නේ නැහැ
+// For returning students (localStorage "me" is set), injects a tiny inline script that
+// modulepreloads the student chunks alongside the entry file. Without it they are requested
+// only after the entry runs, adding a full round trip on slow networks. New visitors are unaffected.
 function preloadStudentChunks() {
   return {
     name: "preload-student-chunks",
@@ -17,7 +16,6 @@ function preloadStudentChunks() {
           (c) => c.type === "chunk" && c.facadeModuleId?.endsWith("StudentApp.jsx"),
         );
         if (!entry) return html;
-        // StudentApp chunk එක සහ ඒකට ඕන අනෙක් chunks (supabase වගේ) ඔක්කොම හොයනවා
         const files = new Set();
         const walk = (f) => {
           if (files.has(f)) return;
@@ -36,16 +34,13 @@ function preloadStudentChunks() {
 export default defineConfig({
   plugins: [react(), preloadStudentChunks()],
   resolve: {
-    // "@" කියන්නේ src folder එක. "../../lib/supabase" වෙනුවට "@/lib/supabase" ලියන්න පුළුවන්
-    alias: { "@": fileURLToPath(new URL("./src", import.meta.url)) },
+    alias: { "@": fileURLToPath(new URL("./src", import.meta.url)) }, // "@/lib/supabase" -> src/lib/supabase
   },
   build: {
-    // අලුත් phone browsers වලට ගැළපෙන කුඩා code එකක් හදනවා
     target: "es2020",
     rollupOptions: {
       output: {
-        // libraries වෙනම files වලට. අපේ code එක වෙනස් කරලා deploy කළාට ඒවා වෙනස් වෙන්නේ නැති නිසා
-        // ළමයාගේ phone එකේ cache එකේ තියෙන එකම පාවිච්චි වෙනවා, ආයෙත් download කරන්න ඕන නැහැ
+        // Vendor chunks rarely change, so they stay cached on phones across deploys.
         manualChunks(id) {
           if (/node_modules[\\/](react|react-dom|scheduler)[\\/]/.test(id)) return "react";
           if (id.includes("node_modules/@supabase")) return "supabase";

@@ -1,13 +1,11 @@
 import { useState } from "react";
 import { SAMPLE } from "./landingData";
 
-// උත්තර පත්‍රයක් වගේ පෙනෙන, ඇත්තටම උත්තර දිය හැකි නියැදි ප්‍රශ්නය
 export default function SampleQuestion({ onStudent }) {
   const [pick, setPick] = useState(null);
   const done = pick === SAMPLE.correct;
   return (
     <div className="qm-paper">
-      {/* නිවැරදි පිළිතුර දුන් විට තරු විසිරෙන animation එක */}
       {done && (
         <div className="qm-burst" aria-hidden="true">
           {Array.from({ length: 10 }, (_, k) => (

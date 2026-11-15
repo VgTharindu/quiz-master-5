@@ -8,34 +8,33 @@ import { formatMinSec } from "@/utils/format";
 import { loadPendingAnswers, useAnswerSaver } from "./useAnswerSaver";
 import SaveStatus from "./SaveStatus";
 
-// පරීක්ෂණය කරන පිටුව. aid = attempt id, done = ඉදිරිපත් කළ පසු call වෙනවා
 export default function TestRunner({ aid, done }) {
   const [data, setData] = useState(null);
-  // දැන් පෙන්වන ප්‍රශ්නයේ index එක. refresh කළොත් එතනින්ම පටන් ගන්න localStorage එකේ තියාගන්නවා
+  // Persisted so a refresh resumes on the same question.
   const [i, setI] = useState(+localStorage.getItem("i_" + aid) || 0);
-  // ans = { [questionId]: { a: තෝරපු පිළිතුර, s: ගත කළ තත්පර } }
+  // { [questionId]: { a: chosen option index, s: seconds spent } }
   const [ans, setAns] = useState({});
   const [msg, setMsg] = useState("");
-  const [loadError, setLoadError] = useState(false); // ප්‍රශ්න load කරන්න බැරි වුණාද
-  const [submitting, setSubmitting] = useState(false); // ඉදිරිපත් කරමින්
-  const [submitError, setSubmitError] = useState(false); // ඉදිරිපත් කරන්න බැරි වුණාද
+  const [loadError, setLoadError] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState(false);
   const saver = useAnswerSaver(aid);
-  const offset = useRef(0); // server වෙලාව - phone වෙලාව
-  const enteredAt = useRef(Date.now()); // මේ ප්‍රශ්නයට ආපු වෙලාව
-  const finished = useRef(false); // finish() දෙපාරක් run වෙන එක නවත්වන්න
-  useTicker(500); // timers තත්පර භාගයකට වරක් යාවත්කාලීන වෙනවා
+  const offset = useRef(0); // server time minus device time (ms)
+  const enteredAt = useRef(Date.now()); // when the current question was opened
+  const finished = useRef(false); // guards against finish() running twice
+  useTicker(500);
 
   const loadQuestions = () => {
     setLoadError(false);
     rpc("get_questions", { aid }, { retries: 4 }).then(({ data, error }) => {
       if (error || !data) return setLoadError(true);
       offset.current = new Date(data.now) - Date.now();
-      // offline වෙලා යවන්න බැරි වුණ පිළිතුරු phone එකේ තියෙනවා නම්, ඒවා server එකේ ඒවාට වඩා අලුත්
+      // Unsent answers stored on the device are newer than the server copy.
       const pending = loadPendingAnswers(aid);
       setAns(pending || data.answers || {});
       if (pending && !data.finished) saver.save(pending);
       setData(data);
-      // ඉක්මනින් පෙන්වන්න පින්තූර කලින්ම load කරලා තියනවා
+      // Preload images so each question renders instantly.
       data.qs.forEach((q) => {
         if (q.image_url) {
           const im = new Image();
@@ -48,10 +47,9 @@ export default function TestRunner({ aid, done }) {
 
   const q = data?.qs[i],
     now = () => Date.now() + offset.current;
-  // මුළු පරීක්ෂණය අවසන් වීමට ඉතිරි තත්පර
   const total = data ? (new Date(data.end_at) - now()) / 1000 : 1;
 
-  // මේ ප්‍රශ්නයට කාල සීමාවක් තියෙනවා නම් ඉතිරි තත්පර. deadline එක localStorage එකේ තියෙන නිසා refresh කළත් reset වෙන්නේ නැහැ
+  // The deadline is stored so a refresh cannot reset a timed question.
   let left = null;
   if (q?.seconds) {
     const key = "dl_" + aid + "_" + q.id;
@@ -63,7 +61,6 @@ export default function TestRunner({ aid, done }) {
     left = (deadline - Date.now()) / 1000;
   }
 
-  // ප්‍රශ්නයෙන් ඉවත් වෙද්දී ගත කළ කාලය එකතු කරලා server එකට save කරනවා
   function leave() {
     const s = Math.round(
       (ans[q.id]?.s || 0) + (Date.now() - enteredAt.current) / 1000,
@@ -81,10 +78,10 @@ export default function TestRunner({ aid, done }) {
     setSubmitting(true);
     setSubmitError(false);
     if (q && total > 0) leave();
-    await saver.flush(); // හැම පිළිතුරක්ම server එකට ගිහින් ඉවර වෙනකම් බලාගෙන ඉන්නවා
+    await saver.flush(); // every answer must reach the server first
     const { error } = await rpc("finish_attempt", { aid }, { retries: 5 });
     if (error) {
-      // ඉදිරිපත් කරන්න බැරි වුණා. පිළිතුරු සුරැකිලා තියෙනවා, ළමයාට නැවත උත්සාහ කරන්න පුළුවන්
+      // Answers are safe on the device; let the student retry.
       finished.current = false;
       setSubmitting(false);
       setSubmitError(true);
@@ -106,7 +103,7 @@ export default function TestRunner({ aid, done }) {
     saver.save(a);
   }
 
-  // හැම render එකකදීම: මුළු කාලය ඉවර නම් ඉදිරිපත් කරනවා, ප්‍රශ්නයේ කාලය ඉවර නම් ඊළඟ ප්‍රශ්නයට යනවා
+  // Runs on every render: auto-submit when the test ends and auto-advance when a timed question expires.
   useEffect(() => {
     if (!data || finished.current || submitError) return;
     if (data.finished || total <= 0) {

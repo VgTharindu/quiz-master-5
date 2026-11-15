@@ -1,5 +1,4 @@
-// ළමයාගේ නම සහ පන්තිය browser එකේ (localStorage) "me" key එකේ සුරැකෙනවා.
-// App.jsx සහ StudentApp.jsx දෙකම මේ functions භාවිත කරනවා, ඒ නිසා key එක එක තැනක විතරයි
+// Single source of truth for the localStorage key shared by App and StudentApp.
 const KEY = "me";
 
 export const loadStudent = () => JSON.parse(localStorage.getItem(KEY) || "null");

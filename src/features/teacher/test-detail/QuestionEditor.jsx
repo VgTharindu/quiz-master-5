@@ -2,10 +2,9 @@ import { useState } from "react";
 import { sb } from "@/lib/supabase";
 import { compressImage } from "@/utils/image";
 
-// හිස් form එක. o = පිළිතුරු 4, c = නිවැරදි පිළිතුරේ index එක, img = අලුත් file එක, url = දැනට තියෙන පින්තූරය
+// o = options, c = correct option index, img = new file to upload, url = existing image URL
 const BLANK = { body: "", o: ["", "", "", ""], c: 0, marks: 1, sec: "", img: null, url: null };
 
-// database row එකක් form state එකට හරවනවා
 const fromQuestion = (q) => ({
   id: q.id,
   body: q.body,
@@ -17,7 +16,6 @@ const fromQuestion = (q) => ({
   url: q.image_url,
 });
 
-// නව ප්‍රශ්නයක් එකතු කරන හෝ (question දුන්නොත්) තියෙන ප්‍රශ්නයක් වෙනස් කරන form එක
 export default function QuestionEditor({ test, question, questions, onSaved, onCancel }) {
   const [n, setN] = useState(question ? fromQuestion(question) : BLANK);
   const [busy, setBusy] = useState(false);
@@ -28,7 +26,6 @@ export default function QuestionEditor({ test, question, questions, onSaved, onC
     setBusy(true);
     let url = n.url;
     if (n.img) {
-      // අලුත් පින්තූරයක් තෝරලා නම් කුඩා කරලා storage එකට upload කරනවා
       const blob = await compressImage(n.img),
         fileName = Date.now() + ".jpg";
       const r = await sb.storage
@@ -53,7 +50,7 @@ export default function QuestionEditor({ test, question, questions, onSaved, onC
       : await sb.from("questions").insert({
           ...row,
           test_id: test.id,
-          pos: Math.max(0, ...questions.map((q) => q.pos)) + 1, // ලැයිස්තුවේ අන්තිමට
+          pos: Math.max(0, ...questions.map((q) => q.pos)) + 1,
         });
     setBusy(false);
     if (error) return alert(error.message);

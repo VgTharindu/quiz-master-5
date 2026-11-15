@@ -8,11 +8,10 @@ import NewTestForm from "./NewTestForm";
 import MonthlyReport from "./MonthlyReport";
 import TestDetail from "./test-detail/TestDetail";
 
-// සර්ගේ මුල් පිටුව: ඉදිරි පරීක්ෂණ, අවසන් පරීක්ෂණ සහ මාසික වාර්තාව
 export default function Dashboard({ out }) {
   const [tab, setTab] = useState(0);
   const [tests, setTests] = useState([]);
-  const [selected, setSelected] = useState(null); // open කරපු test එක
+  const [selected, setSelected] = useState(null);
   const [showForm, setShowForm] = useState(false);
   const [search, setSearch] = useState("");
   const [day, setDay] = useState("");
@@ -37,7 +36,7 @@ export default function Dashboard({ out }) {
       />
     );
 
-  // නමෙන් සහ දිනයෙන් filter කරනවා. en-CA format එක "2026-11-15" වගේ, date input එකේ value එකට සමානයි
+  // en-CA formats dates as YYYY-MM-DD, matching the date input's value.
   const matches = (t) =>
     t.name.toLowerCase().includes(search.toLowerCase()) &&
     (!day || new Date(t.start_at).toLocaleDateString("en-CA") === day);

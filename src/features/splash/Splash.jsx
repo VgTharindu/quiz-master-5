@@ -2,20 +2,18 @@ import { useEffect, useState } from "react";
 import Logo from "@/components/Logo";
 import "./splash.css";
 
-// වෙබ් අඩවිය load වෙද්දී පෙන්වන තත්පර 5ක animation එක
-// පියවර: "5" ඇඳෙනවා → තොප්පිය වැටෙනවා → ✓ මතුවෙනවා → නම අකුරෙන් අකුර එනවා → tagline → උඩට ගිහින් අතුරුදහන් වෙනවා
 const WORD = "QUIZ MASTER";
 
 export default function Splash({ onDone }) {
   const [leaving, setLeaving] = useState(false);
 
   useEffect(() => {
-    // Animations අඩු කරන්න settings දාපු අයට කෙටි කාලයක් පමණයි
+    // Respect the OS "reduce motion" setting with a much shorter splash.
     const calm = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const showFor = calm ? 700 : 4500;
-    const t1 = setTimeout(() => setLeaving(true), showFor); // ඉවත්වීමේ animation එක පටන් ගන්නවා
-    const t2 = setTimeout(onDone, showFor + 500); // ඊට පස්සේ splash එක සම්පූර්ණයෙන්ම ඉවත් කරනවා
-    document.documentElement.style.overflow = "hidden"; // splash එක තියෙද්දී පිටුව scroll වෙන්නේ නැහැ
+    const t1 = setTimeout(() => setLeaving(true), showFor);
+    const t2 = setTimeout(onDone, showFor + 500); // after the 0.5s exit animation
+    document.documentElement.style.overflow = "hidden";
     return () => {
       clearTimeout(t1);
       clearTimeout(t2);

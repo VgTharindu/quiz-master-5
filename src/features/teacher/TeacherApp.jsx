@@ -4,12 +4,10 @@ import Loading from "@/components/Loading";
 import TeacherLogin from "./TeacherLogin";
 import Dashboard from "./Dashboard";
 
-// සර්ගේ පැත්ත: login වෙලා නැත්නම් login පිටුව, වෙලා නම් dashboard එක
 export default function TeacherApp({ exit }) {
   const [session, setSession] = useState(null);
   const [ready, setReady] = useState(false);
   useEffect(() => {
-    // කලින් login වෙලා session එකක් තියෙනවද බලනවා
     sb.auth.getSession().then(({ data }) => {
       setSession(data.session);
       setReady(true);

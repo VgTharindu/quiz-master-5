@@ -1,7 +1,7 @@
 import { lazy } from "react";
 
-// React.lazy එකට සමානයි, නමුත් slow/නැවතෙන network එකක JS කොටස download වෙන්න බැරි වුණොත්
-// තත්පර 1, 2, 3 ක් රැඳී සිට තුන් වතාවක් නැවත උත්සාහ කරනවා
+// React.lazy with retries: a chunk download that fails on a flaky network is retried
+// with a growing delay (1s, 2s, 3s) before the error reaches the ErrorBoundary.
 export function lazyWithRetry(load, retries = 3) {
   const attempt = (left, wait) =>
     load().catch((err) => {

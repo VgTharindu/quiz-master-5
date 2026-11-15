@@ -1,4 +1,3 @@
-// data load කරන්න බැරි වුණාම පෙන්වන පණිවිඩය සහ නැවත උත්සාහ කරන බොත්තම
 export default function RetryMessage({ onRetry, children }) {
   return (
     <div className="wrap" style={{ textAlign: "center", paddingTop: 40 }}>

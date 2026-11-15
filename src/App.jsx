@@ -7,13 +7,12 @@ import NetworkBanner from "@/components/NetworkBanner";
 import { lazyWithRetry } from "@/lib/lazyWithRetry";
 import { loadStudent } from "@/features/student/studentStorage";
 
-// ළමයාගේ සහ සර්ගේ පිටු වෙනම JS කොටස් (chunks) ලෙස build වෙනවා.
-// Home page එක පෙන්වන්න ඒවා ඕන නැති නිසා පළමු load එක ගොඩක් කුඩායි
+// Student and teacher views are separate chunks, so the landing page ships with minimal JS.
 const loadStudentApp = () => import("@/features/student/StudentApp");
 const StudentApp = lazyWithRetry(loadStudentApp);
 const TeacherApp = lazyWithRetry(() => import("@/features/teacher/TeacherApp"));
 
-// splash එක tab එකකට එක පාරක් විතරයි. refresh කළාම (උදා: පරීක්ෂණය අතරතුර) ආයෙත් තත්පර 5ක් බලාගෙන ඉන්න ඕන නැහැ
+// Show the splash once per tab session so a refresh mid-test does not cost another 5 seconds.
 const SPLASH_KEY = "qm_splash_seen";
 const splashSeen = () => {
   try {
@@ -23,9 +22,7 @@ const splashSeen = () => {
   }
 };
 
-// role: null = home page, "s" = ළමයා, "t" = සර්
 export default function App() {
-  // කලින් login වෙච්ච ළමයෙක් නම් කෙලින්ම ළමයාගේ පැත්තට
   const [role, setRole] = useState(() => (loadStudent() ? "s" : null));
   const [splash, setSplash] = useState(() => !splashSeen());
   const hideSplash = useCallback(() => {
@@ -36,9 +33,8 @@ export default function App() {
   }, []);
   const exit = () => setRole(null);
 
-  // ළමයි වැඩිපුරම යන්නේ ළමයාගේ පැත්තට. ඒ නිසා home page එක පෙන්වපු ගමන්, phone එක නිදහස් වෙලාවක
-  // ඒ කොටස කලින්ම download කරලා තියනවා. "පරීක්ෂණයට යන්න" ඔබපුවාම එවෙලේම පිටුව පෙනෙනවා
   useEffect(() => {
+    // Most visitors are students: prefetch their chunk while idle so navigation feels instant.
     const idle = window.requestIdleCallback || ((cb) => setTimeout(cb, 1500));
     idle(() => loadStudentApp().catch(() => {}));
   }, []);
@@ -48,7 +44,6 @@ export default function App() {
   else if (role === "t") page = <TeacherApp exit={exit} />;
   else page = <Landing onStudent={() => setRole("s")} onTeacher={() => setRole("t")} />;
 
-  // splash එක page එකට උඩින් පෙනෙනවා. ඒ අතරතුර යටින් page එක load වෙනවා
   return (
     <>
       <NetworkBanner />

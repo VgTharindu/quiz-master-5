@@ -1,10 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { rpc } from "@/lib/rpc";
 
-// තවම server එකට යන්නේ නැති පිළිතුරු phone එකේ (localStorage) තියාගන්නා key එක
 const pendingKey = (aid) => "pend_" + aid;
 
-// කලින් යවන්න බැරි වුණ පිළිතුරු තියෙනවා නම් ඒවා ගන්නවා (උදා: offline වෙලා page එක refresh කළොත්)
 export function loadPendingAnswers(aid) {
   try {
     return JSON.parse(localStorage.getItem(pendingKey(aid)) || "null");
@@ -13,7 +11,7 @@ export function loadPendingAnswers(aid) {
   }
 }
 
-// ms ප්‍රමාණයක් රැඳී සිටිනවා. ඒ අතරතුර internet ආපහු ආවොත් එවෙලේම නවතිනවා
+// Resolves after `ms`, or earlier if the browser comes back online.
 const waitForRetry = (ms) =>
   new Promise((resolve) => {
     const done = () => {
@@ -25,21 +23,22 @@ const waitForRetry = (ms) =>
     window.addEventListener("online", done);
   });
 
-// ළමයාගේ පිළිතුරු server එකට යවන queue එක.
-//  - එකවර යවන්නේ එක request එකක් විතරයි. ඒ නිසා පරණ පිළිතුරු අලුත් ඒවා උඩින් ලියවෙන්නේ නැහැ
-//  - යවන අතරතුර අලුත් පිළිතුරක් ආවොත්, අන්තිමට යවන්නේ අලුත්ම එක විතරයි
-//  - යවන්න බැරි වුණොත් 1s, 2s, 4s ... (උපරිම 15s) පරතරයකින් සාර්ථක වෙනකම් නැවත උත්සාහ කරනවා
-//  - යවනකම් පිළිතුරු phone එකේ තියෙන නිසා page එක refresh කළත් නැති වෙන්නේ නැහැ
+// status: "saved" | "saving" | "error"
+// Sends answers to the server reliably on slow or flaky networks:
+//  - one request at a time, so an older save can never overwrite a newer one
+//  - only the latest answers are sent when several changes queue up
+//  - failures retry with backoff (1s, 2s, 4s ... max 15s) until they succeed
+//  - unsent answers are kept in localStorage, so a refresh does not lose them
 // status: "saved" | "saving" | "error"
 export function useAnswerSaver(aid) {
   const [status, setStatus] = useState("saved");
-  const latest = useRef(null); // යවන්න තියෙන අලුත්ම පිළිතුරු (null = යවන්න දෙයක් නැහැ)
+  const latest = useRef(null);
   const running = useRef(false);
-  const waiters = useRef([]); // flush() එක බලාගෙන ඉන්න අය
+  const waiters = useRef([]);
   const alive = useRef(true);
 
   const run = useCallback(async () => {
-    if (running.current) return; // දැනටමත් යවමින් නම් ඒ loop එකම අලුත් එකත් යවයි
+    if (running.current) return; // the active loop will pick up the latest answers
     running.current = true;
     let delay = 1000;
     while (latest.current && alive.current) {
@@ -53,7 +52,7 @@ export function useAnswerSaver(aid) {
         continue;
       }
       delay = 1000;
-      // යවන අතරතුර අලුත් පිළිතුරක් ආවේ නැත්නම් වැඩේ ඉවරයි
+      // Only clear if nothing newer arrived while this request was in flight.
       if (latest.current === ans) {
         latest.current = null;
         try {
@@ -68,7 +67,6 @@ export function useAnswerSaver(aid) {
     }
   }, [aid]);
 
-  // අලුත් පිළිතුරු queue එකට දානවා
   const save = useCallback(
     (ans) => {
       latest.current = ans;
@@ -80,7 +78,6 @@ export function useAnswerSaver(aid) {
     [aid, run],
   );
 
-  // queue එකේ තියෙන හැම දෙයක්ම server එකට ගිහින් ඉවර වෙනකම් බලාගෙන ඉන්නවා (ඉදිරිපත් කරන්න කලින්)
   const flush = useCallback(() => {
     if (!latest.current && !running.current) return Promise.resolve();
     return new Promise((resolve) => waiters.current.push(resolve));
@@ -93,9 +90,9 @@ export function useAnswerSaver(aid) {
     };
   }, []);
 
-  // යවන්න තියෙද්දී page එක වහන්න ගියොත් browser එක අනතුරු ඇඟවීමක් පෙන්වනවා
   useEffect(() => {
     if (status === "saved") return;
+    // Warn before closing the tab while answers are still unsent.
     const warn = (e) => {
       e.preventDefault();
       e.returnValue = "";

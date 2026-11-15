@@ -210,7 +210,7 @@ th {
   color: var(--blue);
 }
 
-/* internet නැති විට පෙනෙන තීරුව (components/NetworkBanner.jsx) */
+/* Offline banner (NetworkBanner.jsx) */
 .net-banner {
   position: sticky;
   top: 0;
@@ -222,7 +222,7 @@ th {
   text-align: center;
   padding: 8px 12px;
 }
-/* ළමයාගේ පරීක්ෂණ පිටුවේ පිළිතුරු save වෙන තත්ත්වය (features/student/SaveStatus.jsx) */
+/* Answer save status (SaveStatus.jsx) */
 .save-status {
   font-size: 14px;
   text-align: right;

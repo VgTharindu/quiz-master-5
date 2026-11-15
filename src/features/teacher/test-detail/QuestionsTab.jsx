@@ -3,10 +3,8 @@ import { sb } from "@/lib/supabase";
 import { UPCOMING } from "@/constants/testStatus";
 import QuestionEditor from "./QuestionEditor";
 
-// ප්‍රශ්න tab එක: editor එක (ආරම්භ වෙන්න කලින් විතරක්), ප්‍රශ්න ලැයිස්තුව සහ test එක මකන බොත්තම
 export default function QuestionsTab({ test, status, questions, totalMarks, reload, onTestDeleted }) {
-  // edit කරන ප්‍රශ්නය. null නම් editor එක "නව ප්‍රශ්නයක්" mode එකේ
-  const [editing, setEditing] = useState(null);
+  const [editing, setEditing] = useState(null); // null = "new question" mode
   const canEdit = status === UPCOMING;
 
   async function removeQuestion(q) {
@@ -25,7 +23,7 @@ export default function QuestionsTab({ test, status, questions, totalMarks, relo
   return (
     <>
       {canEdit ? (
-        // key එක වෙනස් වුණාම React එක editor එක අලුතෙන් හදනවා, ඒ නිසා form එක තෝරපු ප්‍රශ්නයෙන් පිරෙනවා
+        // Changing the key remounts the editor so its form re-initialises from the selected question.
         <QuestionEditor
           key={editing?.id ?? "new"}
           test={test}
@@ -72,7 +70,7 @@ export default function QuestionsTab({ test, status, questions, totalMarks, relo
                 className="w sm"
                 onClick={() => {
                   setEditing(q);
-                  window.scrollTo(0, 0); // editor එක උඩ තියෙන නිසා එතනට යනවා
+                  window.scrollTo(0, 0); // the editor is at the top of the page
                 }}
               >
                 ✏ වෙනස් කරන්න
