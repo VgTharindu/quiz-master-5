@@ -1,9 +1,12 @@
 import { useEffect, useRef, useState } from "react";
-import { sb } from "@/lib/supabase";
+import { rpc } from "@/lib/rpc";
 import Loading from "@/components/Loading";
 import TopBar from "@/components/TopBar";
+import RetryMessage from "@/components/RetryMessage";
 import { useTicker } from "@/hooks/useTicker";
 import { formatMinSec } from "@/utils/format";
+import { loadPendingAnswers, useAnswerSaver } from "./useAnswerSaver";
+import SaveStatus from "./SaveStatus";
 
 // පරීක්ෂණය කරන පිටුව. aid = attempt id, done = ඉදිරිපත් කළ පසු call වෙනවා
 export default function TestRunner({ aid, done }) {
@@ -13,15 +16,24 @@ export default function TestRunner({ aid, done }) {
   // ans = { [questionId]: { a: තෝරපු පිළිතුර, s: ගත කළ තත්පර } }
   const [ans, setAns] = useState({});
   const [msg, setMsg] = useState("");
+  const [loadError, setLoadError] = useState(false); // ප්‍රශ්න load කරන්න බැරි වුණාද
+  const [submitting, setSubmitting] = useState(false); // ඉදිරිපත් කරමින්
+  const [submitError, setSubmitError] = useState(false); // ඉදිරිපත් කරන්න බැරි වුණාද
+  const saver = useAnswerSaver(aid);
   const offset = useRef(0); // server වෙලාව - phone වෙලාව
   const enteredAt = useRef(Date.now()); // මේ ප්‍රශ්නයට ආපු වෙලාව
   const finished = useRef(false); // finish() දෙපාරක් run වෙන එක නවත්වන්න
   useTicker(500); // timers තත්පර භාගයකට වරක් යාවත්කාලීන වෙනවා
 
-  useEffect(() => {
-    sb.rpc("get_questions", { aid }).then(({ data }) => {
+  const loadQuestions = () => {
+    setLoadError(false);
+    rpc("get_questions", { aid }, { retries: 4 }).then(({ data, error }) => {
+      if (error || !data) return setLoadError(true);
       offset.current = new Date(data.now) - Date.now();
-      setAns(data.answers || {});
+      // offline වෙලා යවන්න බැරි වුණ පිළිතුරු phone එකේ තියෙනවා නම්, ඒවා server එකේ ඒවාට වඩා අලුත්
+      const pending = loadPendingAnswers(aid);
+      setAns(pending || data.answers || {});
+      if (pending && !data.finished) saver.save(pending);
       setData(data);
       // ඉක්මනින් පෙන්වන්න පින්තූර කලින්ම load කරලා තියනවා
       data.qs.forEach((q) => {
@@ -31,7 +43,8 @@ export default function TestRunner({ aid, done }) {
         }
       });
     });
-  }, [aid]);
+  };
+  useEffect(loadQuestions, [aid]);
 
   const q = data?.qs[i],
     now = () => Date.now() + offset.current;
@@ -58,18 +71,25 @@ export default function TestRunner({ aid, done }) {
     enteredAt.current = Date.now();
     const a = { ...ans, [q.id]: { ...ans[q.id], s } };
     setAns(a);
-    sb.rpc("save_answers", { aid, ans: a });
+    saver.save(a);
     return a;
   }
 
   async function finish() {
     if (finished.current) return;
     finished.current = true;
-    if (q && total > 0) {
-      const a = leave();
-      await sb.rpc("save_answers", { aid, ans: a });
+    setSubmitting(true);
+    setSubmitError(false);
+    if (q && total > 0) leave();
+    await saver.flush(); // හැම පිළිතුරක්ම server එකට ගිහින් ඉවර වෙනකම් බලාගෙන ඉන්නවා
+    const { error } = await rpc("finish_attempt", { aid }, { retries: 5 });
+    if (error) {
+      // ඉදිරිපත් කරන්න බැරි වුණා. පිළිතුරු සුරැකිලා තියෙනවා, ළමයාට නැවත උත්සාහ කරන්න පුළුවන්
+      finished.current = false;
+      setSubmitting(false);
+      setSubmitError(true);
+      return;
     }
-    await sb.rpc("finish_attempt", { aid });
     done();
   }
 
@@ -83,12 +103,12 @@ export default function TestRunner({ aid, done }) {
   function pick(k) {
     const a = { ...ans, [q.id]: { ...ans[q.id], a: k } };
     setAns(a);
-    sb.rpc("save_answers", { aid, ans: a });
+    saver.save(a);
   }
 
   // හැම render එකකදීම: මුළු කාලය ඉවර නම් ඉදිරිපත් කරනවා, ප්‍රශ්නයේ කාලය ඉවර නම් ඊළඟ ප්‍රශ්නයට යනවා
   useEffect(() => {
-    if (!data || finished.current) return;
+    if (!data || finished.current || submitError) return;
     if (data.finished || total <= 0) {
       finish();
       return;
@@ -102,7 +122,21 @@ export default function TestRunner({ aid, done }) {
     }
   });
 
+  if (loadError) return <RetryMessage onRetry={loadQuestions} />;
   if (!data) return <Loading />;
+  if (submitting)
+    return (
+      <div className="wrap" style={{ textAlign: "center", paddingTop: 40 }}>
+        <h2>ඉදිරිපත් කරමින්…</h2>
+        <SaveStatus status={saver.status} />
+      </div>
+    );
+  if (submitError)
+    return (
+      <RetryMessage onRetry={finish}>
+        ඉදිරිපත් කිරීමට නොහැකි විය. ඔබේ පිළිතුරු සුරැකී ඇත. Internet සම්බන්ධතාවය පරීක්ෂා කර නැවත උත්සාහ කරන්න.
+      </RetryMessage>
+    );
   if (!q)
     return (
       <div className="wrap">
@@ -118,6 +152,7 @@ export default function TestRunner({ aid, done }) {
         right={<span>මුළු කාලය: {formatMinSec(total)}</span>}
       />
       <div className="wrap">
+        <SaveStatus status={saver.status} />
         {left !== null && (
           <div className={"tm " + (left < 10 ? "warn" : "")}>
             ⏱ {Math.ceil(Math.max(0, left))} තත්පර

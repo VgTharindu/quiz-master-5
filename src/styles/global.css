@@ -209,3 +209,30 @@ th {
   font-size: 24px;
   color: var(--blue);
 }
+
+/* internet නැති විට පෙනෙන තීරුව (components/NetworkBanner.jsx) */
+.net-banner {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: #f7931e;
+  color: #1e2440;
+  font-size: 15px;
+  font-weight: 600;
+  text-align: center;
+  padding: 8px 12px;
+}
+/* ළමයාගේ පරීක්ෂණ පිටුවේ පිළිතුරු save වෙන තත්ත්වය (features/student/SaveStatus.jsx) */
+.save-status {
+  font-size: 14px;
+  text-align: right;
+  margin: -4px 0 8px;
+  color: #64748b;
+}
+.save-status.pending {
+  color: #ca8a04;
+}
+.save-status.error {
+  color: #dc2626;
+  font-weight: 600;
+}
