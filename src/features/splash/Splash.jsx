@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import Logo from "./Logo";
+import Logo from "@/components/Logo";
 import "./splash.css";
 
 // වෙබ් අඩවිය load වෙද්දී පෙන්වන තත්පර 5ක animation එක

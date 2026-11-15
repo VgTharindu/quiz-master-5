@@ -1,17 +1,28 @@
-import {useCallback,useState} from 'react'
-import Student from './Student'
-import Teacher from './Teacher'
-import Landing from './Landing'
-import Splash from './Splash'
+import { useCallback, useState } from "react";
+import Splash from "@/features/splash/Splash";
+import Landing from "@/features/landing/Landing";
+import StudentApp from "@/features/student/StudentApp";
+import TeacherApp from "@/features/teacher/TeacherApp";
+import { loadStudent } from "@/features/student/studentStorage";
 
-export default function App(){
-  const [role,setRole]=useState(localStorage.getItem('me')?'s':null)
-  const [splash,setSplash]=useState(true)
-  const hideSplash=useCallback(()=>setSplash(false),[])
-  const exit=()=>setRole(null)
-  let page
-  if(role==='s')page=<Student exit={exit}/>
-  else if(role==='t')page=<Teacher exit={exit}/>
-  else page=<Landing onStudent={()=>setRole('s')} onTeacher={()=>setRole('t')}/>
-  return <>{page}{splash&&<Splash onDone={hideSplash}/>}</>
+// role: null = home page, "s" = ළමයා, "t" = සර්
+export default function App() {
+  // කලින් login වෙච්ච ළමයෙක් නම් කෙලින්ම ළමයාගේ පැත්තට
+  const [role, setRole] = useState(() => (loadStudent() ? "s" : null));
+  const [splash, setSplash] = useState(true);
+  const hideSplash = useCallback(() => setSplash(false), []);
+  const exit = () => setRole(null);
+
+  let page;
+  if (role === "s") page = <StudentApp exit={exit} />;
+  else if (role === "t") page = <TeacherApp exit={exit} />;
+  else page = <Landing onStudent={() => setRole("s")} onTeacher={() => setRole("t")} />;
+
+  // splash එක page එකට උඩින් පෙනෙනවා. ඒ අතරතුර යටින් page එක load වෙනවා
+  return (
+    <>
+      {page}
+      {splash && <Splash onDone={hideSplash} />}
+    </>
+  );
 }
