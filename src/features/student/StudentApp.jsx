@@ -28,7 +28,7 @@ export default function StudentApp({ exit }) {
       />
     );
   if (view.page === "result")
-    return <ResultView aid={view.aid} back={() => setView({ page: "home" })} />;
+    return <ResultView me={me} aid={view.aid} back={() => setView({ page: "home" })} />;
   return (
     <StudentHome
       me={me}

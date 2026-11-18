@@ -42,3 +42,22 @@ if not(a.finished or now()>=t.end_at) then raise exception 'not yet';end if;
 sc:=score_of(a);select 1+count(*) into rk from attempts x where x.test_id=t.id and score_of(x)>sc;
 return json_build_object('score',sc,'total',(select sum(marks) from questions where test_id=t.id),'rank',rk,'count',(select count(*) from attempts where test_id=t.id),
 'items',(select json_agg(json_build_object('body',q.body,'image_url',q.image_url,'options',q.options,'correct',q.correct,'marks',q.marks,'mine',(a.answers->(q.id::text)->>'a')) order by q.pos) from questions q where q.test_id=t.id));end $$;
+
+-- Gold coins (also available as migrations/002_gold_coins.sql for existing databases)
+create or replace function correct_count(a attempts) returns int language sql stable as $$
+  select count(*)::int
+  from questions q
+  where q.test_id = a.test_id
+    and (a.answers->(q.id::text)->>'a')::int = q.correct
+$$;
+
+create or replace function get_coins(nm text, g int) returns int language sql stable security definer as $$
+  select coalesce(sum(correct_count(a)), 0)::int
+  from attempts a
+  join tests t on t.id = a.test_id
+  where lower(a.student) = lower(trim(nm))
+    and a.grade = g
+    and (a.finished or now() >= t.end_at)
+$$;
+
+grant execute on function get_coins(text, int) to anon, authenticated;
