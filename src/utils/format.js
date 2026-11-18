@@ -28,4 +28,4 @@ export const formatCountdown = (s) => {
 
 // seconds -> minutes and seconds with Sinhala unit labels
 export const formatDuration = (s) =>
-  Math.floor(s / 60) + "මි " + Math.round(s % 60) + "තත්";
+  s < 60 ? Math.round(s) + "තත්" : Math.floor(s / 60) + "මි " + Math.round(s % 60) + "තත්";

@@ -4,18 +4,23 @@ import TopBar from "@/components/TopBar";
 import Tabs from "@/components/Tabs";
 import BackButton from "@/components/BackButton";
 import StatusTag from "@/components/StatusTag";
-import { ENDED, LIVE, getTestStatus } from "@/constants/testStatus";
+import { ENDED, LIVE, UPCOMING, getTestStatus } from "@/constants/testStatus";
 import { formatDateTime } from "@/utils/format";
-import { calcScore } from "@/utils/score";
+import TestForm from "../TestForm";
+import { buildTestReport } from "../reports/reportData";
+import { useCoinBoard } from "../reports/useCoinBoard";
 import QuestionsTab from "./QuestionsTab";
 import ResultsTab from "./ResultsTab";
 import AnalysisTab from "./AnalysisTab";
 
-export default function TestDetail({ test, back }) {
+export default function TestDetail({ test: initialTest, initialTab, back, onOpenTest }) {
+  const [test, setTest] = useState(initialTest);
   const status = getTestStatus(test);
-  const [tab, setTab] = useState(status === ENDED ? 1 : 0);
+  const [tab, setTab] = useState(initialTab ?? (status === ENDED ? 1 : 0));
   const [questions, setQuestions] = useState([]);
   const [attempts, setAttempts] = useState([]);
+  const [panel, setPanel] = useState(null); // "edit" | "republish" | null
+  const coinMap = useCoinBoard(test.grade);
 
   const loadQuestions = () =>
     sb
@@ -35,38 +40,77 @@ export default function TestDetail({ test, back }) {
     loadAttempts();
   }, []);
 
-  const totalMarks = questions.reduce((s, q) => s + q.marks, 0),
-    end = new Date(test.end_at);
-  // Unfinished attempts are timed up to now, or up to the test end if it has passed.
-  const rows = attempts
-    .map((r) => {
-      const sec =
-        ((r.finished_at
-          ? new Date(r.finished_at)
-          : new Date(Math.min(Date.now(), end))) -
-          new Date(r.started_at)) /
-        1000;
-      return { නම: r.student, ලකුණු: calcScore(r, questions), sec };
-    })
-    .sort((a, b) => b.ලකුණු - a.ලකුණු);
+  const report = buildTestReport(test, questions, attempts, coinMap);
+
+  async function saveEdit(row) {
+    // Once a test is live only its name and end time may change.
+    const patch = status === UPCOMING ? row : { name: row.name, end_at: row.end_at };
+    if (status === LIVE && new Date(patch.end_at) <= new Date())
+      return "අවසන් වෙලාව දැන් වෙලාවට පසුව විය යුතුයි";
+    const { data, error } = await sb.from("tests").update(patch).eq("id", test.id).select().single();
+    if (error) return error.message;
+    setTest(data);
+    setPanel(null);
+  }
+
+  // Copies the test and its questions into a brand-new test. The original keeps its own results.
+  async function republish(row) {
+    const { data: copy, error } = await sb.from("tests").insert(row).select().single();
+    if (error) return error.message;
+    if (questions.length) {
+      const rows = questions.map(({ id, test_id, created_at, ...q }) => ({ ...q, test_id: copy.id }));
+      const { error: qError } = await sb.from("questions").insert(rows);
+      if (qError) {
+        await sb.from("tests").delete().eq("id", copy.id);
+        return qError.message;
+      }
+    }
+    alert(`"${copy.name}" නැවත publish කළා. ප්‍රශ්න ${questions.length}ක් copy වුණා.`);
+    onOpenTest(copy, 0);
+  }
 
   return (
     <div>
-      <TopBar
-        left={test.name}
-        right={<span style={{ fontSize: 14 }}>{test.grade} වසර</span>}
-      />
+      <TopBar left={test.name} right={<span style={{ fontSize: 14 }}>{test.grade} වසර</span>} />
       <div className="wrap">
         <BackButton onClick={back} />
         <p>
-          {formatDateTime(test.start_at)} සිට {formatDateTime(test.end_at)} ·{" "}
-          <StatusTag status={status} />
+          {formatDateTime(test.start_at)} සිට {formatDateTime(test.end_at)} · <StatusTag status={status} />
         </p>
-        {status === LIVE && (
-          <div className="card warn">
-            ⚠ පරීක්ෂණය දැන් පවතී. ප්‍රශ්න වෙනස් කළ නොහැක.
-          </div>
+        <div className="t-actions">
+          {status !== ENDED && (
+            <button className="w" onClick={() => setPanel(panel === "edit" ? null : "edit")}>
+              ✏ නම / වෙලාව වෙනස් කරන්න
+            </button>
+          )}
+          <button className="w" onClick={() => setPanel(panel === "republish" ? null : "republish")}>
+            🔁 නැවත publish කරන්න
+          </button>
+        </div>
+        {panel === "edit" && (
+          <TestForm
+            initial={test}
+            lock={status === LIVE ? { grade: true, start: true } : {}}
+            submitLabel="වෙනස්කම් සුරකින්න"
+            onSubmit={saveEdit}
+            onCancel={() => setPanel(null)}
+          />
         )}
+        {panel === "republish" && (
+          <>
+            <p className="t-hint">
+              මේ පරීක්ෂණයේ ප්‍රශ්න {questions.length} අලුත් පරීක්ෂණයකට copy වෙනවා. පරණ පරීක්ෂණය සහ එහි ප්‍රතිඵල ඒ
+              විදිහටම ඉතිහාසයේ තියෙනවා.
+            </p>
+            <TestForm
+              initial={{ name: test.name, grade: test.grade }}
+              submitLabel="නැවත publish කරන්න"
+              onSubmit={republish}
+              onCancel={() => setPanel(null)}
+            />
+          </>
+        )}
+        {status === LIVE && <div className="card warn">⚠ පරීක්ෂණය දැන් පවතී. ප්‍රශ්න වෙනස් කළ නොහැක.</div>}
         <Tabs
           items={["ප්‍රශ්න", "ප්‍රතිඵල", "විශ්ලේෂණය"]}
           active={tab}
@@ -80,22 +124,13 @@ export default function TestDetail({ test, back }) {
             test={test}
             status={status}
             questions={questions}
-            totalMarks={totalMarks}
+            totalMarks={report.totalMarks}
             reload={loadQuestions}
             onTestDeleted={back}
           />
         )}
-        {tab === 1 && (
-          <ResultsTab
-            test={test}
-            rows={rows}
-            totalMarks={totalMarks}
-            questionCount={questions.length || 1}
-          />
-        )}
-        {tab === 2 && (
-          <AnalysisTab rows={rows} questions={questions} attempts={attempts} />
-        )}
+        {tab === 1 && <ResultsTab report={report} />}
+        {tab === 2 && <AnalysisTab report={report} />}
       </div>
     </div>
   );
