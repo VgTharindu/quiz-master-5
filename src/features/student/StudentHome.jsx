@@ -4,6 +4,8 @@ import TopBar from "@/components/TopBar";
 import Tabs from "@/components/Tabs";
 import { useTicker } from "@/hooks/useTicker";
 import StudentTestCard from "./StudentTestCard";
+import CoinCounter from "@/features/coins/CoinCounter";
+import { useCoinTotal } from "@/features/coins/useCoins";
 
 export default function StudentHome({ me, go, change, exit }) {
   // Stale-while-revalidate: show the last cached list immediately, then refresh in the background.
@@ -11,6 +13,7 @@ export default function StudentHome({ me, go, change, exit }) {
   const [tests, setTests] = useState(cached?.tests || []);
   const [tab, setTab] = useState(0);
   const offset = useRef(cached?.offset || 0); // server time minus device time (ms)
+  const coins = useCoinTotal(me);
   useTicker(1000);
 
   const load = () =>
@@ -65,8 +68,11 @@ export default function StudentHome({ me, go, change, exit }) {
       <TopBar
         left={`👤 ${me.name} · ${me.grade} වසර`}
         right={
-          <span onClick={exit} style={{ fontSize: 14 }}>
-            ඉවත් වන්න
+          <span className="bar-right">
+            <CoinCounter value={coins} />
+            <span onClick={exit} style={{ fontSize: 14 }}>
+              ඉවත් වන්න
+            </span>
           </span>
         }
       />
