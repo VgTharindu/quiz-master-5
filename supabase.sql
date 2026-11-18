@@ -61,3 +61,18 @@ create or replace function get_coins(nm text, g int) returns int language sql st
 $$;
 
 grant execute on function get_coins(text, int) to anon, authenticated;
+
+-- Teacher coin board (also available as migrations/003_teacher_coin_board.sql)
+create or replace function coin_board(g int) returns table(student text, coins int)
+language sql stable security definer as $$
+  select min(a.student), coalesce(sum(correct_count(a)), 0)::int
+  from attempts a
+  join tests t on t.id = a.test_id
+  where a.grade = g
+    and (a.finished or now() >= t.end_at)
+  group by lower(trim(a.student))
+$$;
+
+-- Teacher only: students should not be able to list everyone's names.
+revoke execute on function coin_board(int) from public, anon;
+grant execute on function coin_board(int) to authenticated;

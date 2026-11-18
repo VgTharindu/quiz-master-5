@@ -1,0 +1,184 @@
+/* Teacher dashboard (mobile-first) */
+.t-app {
+  padding-bottom: 84px; /* room for the bottom navigation */
+}
+/* Keep the right-hand item of the top bar compact and pinned to the edge. */
+.t-app .bar.row > :last-child {
+  flex: none;
+  margin-left: 12px;
+}
+.bnav {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 20;
+  display: flex;
+  background: #fff;
+  border-top: 1px solid #dbeafe;
+  box-shadow: 0 -4px 16px rgba(30, 64, 175, 0.08);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+.bnav button {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  background: none;
+  color: #64748b;
+  border-radius: 0;
+  padding: 8px 4px 10px;
+  min-height: 64px;
+  font-size: 13px;
+  font-weight: 600;
+}
+.bnav button span {
+  font-size: 22px;
+  line-height: 1;
+}
+.bnav button.on {
+  color: var(--blue);
+  box-shadow: inset 0 3px 0 var(--blue);
+}
+.t-section-title {
+  margin: 4px 0 10px;
+}
+.t-form label {
+  display: block;
+  font-size: 15px;
+  font-weight: 600;
+  color: #334155;
+}
+.month-picker {
+  display: flex;
+  gap: 8px;
+}
+.month-picker select {
+  flex: 1;
+}
+.t-filters {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0 8px;
+}
+.t-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 10px 0;
+}
+.t-actions > button {
+  flex: 1 1 160px;
+}
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  margin: 10px 0;
+}
+.stat-grid > div {
+  background: #fff;
+  border: 1px solid #dbeafe;
+  border-radius: 12px;
+  padding: 10px;
+  text-align: center;
+}
+.stat-grid b {
+  display: block;
+  font-size: 20px;
+  color: var(--blue);
+  line-height: 1.3;
+}
+.stat-grid span {
+  font-size: 13px;
+  color: #475569;
+}
+
+/* Ranked result rows */
+.rank-list {
+  list-style: none;
+  margin: 10px 0;
+  padding: 0;
+}
+.rank-row {
+  display: grid;
+  grid-template-columns: 40px 1fr auto;
+  gap: 10px;
+  align-items: center;
+  background: #fff;
+  border: 1px solid #dbeafe;
+  border-radius: 12px;
+  padding: 10px 12px;
+  margin-bottom: 8px;
+}
+.rank-badge {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-weight: 800;
+  background: #eff6ff;
+  color: var(--blue);
+}
+.rank-row.r1 .rank-badge {
+  background: #ffd43b;
+  color: #6b4500;
+}
+.rank-row.r2 .rank-badge {
+  background: #e2e8f0;
+  color: #334155;
+}
+.rank-row.r3 .rank-badge {
+  background: #f5c08a;
+  color: #6b3a00;
+}
+.rank-name {
+  font-weight: 700;
+  line-height: 1.3;
+}
+.rank-meta {
+  font-size: 13px;
+  color: #64748b;
+}
+.rank-score {
+  text-align: right;
+  font-weight: 800;
+  color: var(--blue);
+  line-height: 1.3;
+}
+.rank-score small {
+  display: block;
+  font-weight: 600;
+}
+.coin-value {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: #8a5a00;
+  white-space: nowrap;
+}
+.t-hint {
+  font-size: 14px;
+  color: #64748b;
+}
+.chart-card {
+  background: #fff;
+  border: 1px solid #dbeafe;
+  border-radius: 14px;
+  padding: 10px 6px;
+  margin: 10px 0;
+}
+.month-item.absent {
+  opacity: 0.6;
+}
+
+@media (min-width: 700px) {
+  .stat-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  .t-filters {
+    grid-template-columns: 1fr 2fr;
+  }
+}
