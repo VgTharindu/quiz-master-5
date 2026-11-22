@@ -177,7 +177,7 @@ export default function TestRunner({ aid, done }) {
         {msg && <div className="st-alert">{msg}</div>}
         <div className="st-question with-pet">
           <span className="st-question-pet">
-            <Art name="cat" size={64} fallback={<PeekingCat size={78} />} />
+            <Art name="pencil-mascot" size={70} fallback={<PeekingCat size={78} />} />
           </span>
           <span className="st-marks">ලකුණු {q.marks}</span>
           <h2>{q.body}</h2>

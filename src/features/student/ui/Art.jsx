@@ -8,8 +8,11 @@ const ART = Object.fromEntries(
   Object.entries(files).map(([path, url]) => [path.split("/").pop().replace(/\.\w+$/, ""), url]),
 );
 
+export const hasArt = (name) => Boolean(ART[name]);
+
 // Shows art/<name>.* when it exists, otherwise the drawn SVG fallback.
-export default function Art({ name, size, width, height, fallback, className }) {
+// fit="cover" fills the box (e.g. a round avatar); the default keeps the whole image visible.
+export default function Art({ name, size, width, height, fallback, className, fit = "contain", position }) {
   const url = ART[name];
   if (!url) return fallback;
   return (
@@ -21,7 +24,8 @@ export default function Art({ name, size, width, height, fallback, className }) 
       width={width ?? size}
       height={height ?? size}
       decoding="async"
-      style={{ display: "block", objectFit: "contain", maxWidth: "100%" }}
+      loading="lazy"
+      style={{ display: "block", objectFit: fit, objectPosition: position, maxWidth: "100%", height: "auto" }}
     />
   );
 }

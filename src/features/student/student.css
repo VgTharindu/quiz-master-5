@@ -838,7 +838,7 @@
 }
 .st-question-pet {
   position: absolute;
-  top: -50px;
+  top: -56px;
   left: 18px;
 }
 .st-empty.owl {
@@ -853,4 +853,12 @@
   border-radius: 50%;
   border: 3px solid #fff;
   background: #dcebff;
+}
+.st-avatar-img {
+  width: 66px;
+  height: 66px;
+  aspect-ratio: 1;
+}
+.st-login-art .st-art-top {
+  margin-bottom: 4px;
 }

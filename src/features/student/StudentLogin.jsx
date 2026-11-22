@@ -4,12 +4,12 @@ import { GRADES } from "@/constants/grades";
 import { BookIcon, BulbIcon, CheckBadge, Chevron, PencilIcon, StarIcon, TrophyIcon, UserIcon } from "./ui/icons";
 import { CheerBanner, Sparkles } from "./ui/Decor";
 import { KidsAtDesk } from "./ui/illustrations";
-import Art from "./ui/Art";
+import Art, { hasArt } from "./ui/Art";
 
 const GRADE_STYLE = {
-  3: { tone: "blue", icon: <BookIcon size={34} /> },
-  4: { tone: "green", icon: <PencilIcon size={30} /> },
-  5: { tone: "purple", icon: <StarIcon size={30} /> },
+  3: { tone: "blue", icon: <Art name="book" size={40} fallback={<BookIcon size={34} />} /> },
+  4: { tone: "green", icon: <Art name="pencil-mascot" size={40} fallback={<PencilIcon size={30} />} /> },
+  5: { tone: "purple", icon: <Art name="star-mascot" size={40} fallback={<StarIcon size={30} />} /> },
 };
 
 export default function StudentLogin({ done, exit }) {
@@ -80,10 +80,11 @@ export default function StudentLogin({ done, exit }) {
 
         <div className="st-login-art" aria-hidden="true">
           <div className="st-art-top">
-            <BulbIcon size={52} />
+            {/* The kids artwork already has its own light bulb. */}
+            {!hasArt("kids-desk") && <BulbIcon size={52} />}
             <span className="st-bubble">ඉගෙනීම මැජික් වගේ!</span>
           </div>
-          <Art name="kids-desk" width={320} height={180} fallback={<KidsAtDesk />} />
+          <Art name="kids-desk" width={340} height={218} fallback={<KidsAtDesk />} />
         </div>
       </div>
       <CheerBanner text="ජයගන්න ඔබට හැකියි!" />
