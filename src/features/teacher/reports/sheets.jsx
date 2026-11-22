@@ -60,7 +60,7 @@ export function TestResultSheet({ report }) {
             <th className="num">%</th>
             <th className="num">ගතවූ කාලය</th>
             <th className="num">ප්‍රශ්නයකට</th>
-            <th className="num">රන් කාසි</th>
+            <th className="num">Coins</th>
           </tr>
         </thead>
         <tbody>
@@ -129,7 +129,7 @@ export function TestAnalysisSheet({ report }) {
             <th>නම</th>
             <th className="num">ලකුණු</th>
             <th className="num">%</th>
-            <th className="num">රන් කාසි</th>
+            <th className="num">Coins</th>
           </tr>
         </thead>
         <tbody>
@@ -163,7 +163,7 @@ export function StudentMonthSheet({ grade, year, month, data, coins }) {
           නම: <b>{data.displayName}</b>
         </div>
         <div>
-          රන් කාසි: <CoinValue value={coins} size={18} />
+          Coins: <CoinValue value={coins} size={18} />
         </div>
       </div>
       <SheetStats items={studentStats(data)} />
@@ -245,7 +245,7 @@ export function MonthlyAverageSheet({ grade, year, month, rows }) {
             <th>නම</th>
             <th className="num">පරීක්ෂණ</th>
             <th className="num">සාමාන්‍ය ලකුණු</th>
-            <th className="num">රන් කාසි</th>
+            <th className="num">Coins</th>
           </tr>
         </thead>
         <tbody>

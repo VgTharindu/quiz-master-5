@@ -1,5 +1,6 @@
 import { useState } from "react";
 import TopBar from "@/components/TopBar";
+import { useBackHandler } from "@/hooks/useBackHandler";
 import TestDetail from "./test-detail/TestDetail";
 import ScheduledSection from "./sections/ScheduledSection";
 import AnalysisSection from "./sections/AnalysisSection";
@@ -20,6 +21,7 @@ export default function Dashboard({ out }) {
     setOpened({ test, tab });
     window.scrollTo(0, 0);
   };
+  useBackHandler(opened !== null, () => setOpened(null), 1);
 
   if (opened)
     return (
@@ -39,9 +41,9 @@ export default function Dashboard({ out }) {
       <TopBar
         left="👨‍🏫 චාමර සර්"
         right={
-          <span onClick={out} style={{ fontSize: 14 }}>
+          <button className="t-out" onClick={out}>
             ඉවත් වන්න
-          </span>
+          </button>
         }
       />
       <div className="wrap">

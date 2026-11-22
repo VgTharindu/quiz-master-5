@@ -14,6 +14,7 @@ export default function Sticker({ name, width, className, eager = false }) {
       className={className}
       width={width}
       loading={eager ? "eager" : "lazy"}
+      fetchpriority={eager ? "high" : "low"}
       decoding="async"
       draggable="false"
     />

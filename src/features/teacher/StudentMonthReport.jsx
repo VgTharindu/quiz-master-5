@@ -4,7 +4,14 @@ import GradeSelect from "@/components/GradeSelect";
 import MonthPicker, { currentMonth } from "@/components/MonthPicker";
 import PdfButton from "@/components/PdfButton";
 import { MONTHS, formatDuration } from "@/utils/format";
-import { buildStudentMonth, fetchMonthTests, fetchStudentNames, fetchTestsData } from "./reports/reportData";
+import {
+  buildStudentMonth,
+  computeCoinBoard,
+  fetchMonthTests,
+  fetchStudentNames,
+  fetchTestsData,
+  nameKey,
+} from "./reports/reportData";
 import { StudentGrowthChart, StudentMonthSheet, studentStats } from "./reports/sheets";
 import CoinValue from "./reports/CoinValue";
 
@@ -28,7 +35,12 @@ export default function StudentMonthReport() {
       const { questions, attempts } = await fetchTestsData(tests.map((t) => t.id));
       const data = buildStudentMonth(name, tests, questions, attempts);
       const coinsRes = await rpc("get_coins", { nm: name, g: grade }, { retries: 1 });
-      setReport({ data, coins: coinsRes.error ? null : coinsRes.data, grade, ...period });
+      const coins = !coinsRes.error
+        ? coinsRes.data
+        : await computeCoinBoard(grade)
+            .then((board) => board.get(nameKey(name)) ?? 0)
+            .catch(() => null);
+      setReport({ data, coins, grade, ...period });
     } catch {
       alert("දත්ත ලබාගත නොහැකි විය. නැවත උත්සාහ කරන්න.");
     } finally {

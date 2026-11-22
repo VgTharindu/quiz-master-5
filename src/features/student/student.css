@@ -99,11 +99,15 @@
   min-width: 0;
   line-height: 1.25;
 }
+/* Long names wrap between words and stop after two lines. */
 .st-head-name b {
-  display: block;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
   font-size: 22px;
   font-weight: 700;
-  overflow-wrap: anywhere;
+  overflow-wrap: break-word;
 }
 .st-head-name span {
   font-size: 16px;
@@ -439,24 +443,36 @@
 .st-app .st-grade {
   position: relative;
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 0;
-  border-radius: 20px;
-  padding: 10px 4px 12px;
-  min-height: 128px;
+  justify-content: center;
+  gap: 6px;
+  border-radius: 18px;
+  padding: 8px 4px;
+  min-height: 66px;
   border: 3px solid transparent;
   color: var(--st-ink);
-  line-height: 1.2;
+  line-height: 1.1;
+}
+.st-grade > img,
+.st-grade > svg {
+  flex: none;
+  width: 34px;
+  height: 34px;
+  object-fit: contain;
+}
+.st-grade-label {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 }
 .st-grade b {
   font-family: var(--st-round);
-  font-size: 40px;
-  line-height: 1.1;
+  font-size: 30px;
+  line-height: 1;
 }
-.st-grade span {
+.st-grade-label span {
+  font-size: 14px;
   font-weight: 700;
-  margin-bottom: 4px;
 }
 .st-app .st-grade.blue {
   background: #e1ecff;
@@ -863,7 +879,7 @@
   margin-bottom: 4px;
 }
 
-/* Full-screen painted backgrounds. The base colour shows while the image loads. */
+/* Full-screen vector backgrounds: sharp at any screen size or zoom level. */
 .st-bg {
   position: relative;
   min-height: 100vh;
@@ -874,36 +890,39 @@
   position: fixed;
   inset: 0;
   z-index: -1;
-  background-repeat: no-repeat;
-  background-position: center bottom;
-  background-size: cover;
+  background-repeat: repeat-x, repeat, no-repeat;
+  background-position: left bottom, center top, center;
+  background-size: 420px 180px, 300px 340px, cover;
 }
 .st-bg.sky::before {
-  background-color: #5dc3fd;
-  background-image: url("./art/bg/sky-clouds-stars.webp");
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='420' height='180' viewBox='0 0 420 180'%3E%3Ccircle cx='0' cy='106' r='60' fill='%23dff1ff'/%3E%3Ccircle cx='70' cy='96' r='48' fill='%23dff1ff'/%3E%3Ccircle cx='130' cy='76' r='58' fill='%23dff1ff'/%3E%3Ccircle cx='200' cy='98' r='50' fill='%23dff1ff'/%3E%3Ccircle cx='260' cy='82' r='62' fill='%23dff1ff'/%3E%3Ccircle cx='330' cy='102' r='50' fill='%23dff1ff'/%3E%3Ccircle cx='380' cy='90' r='46' fill='%23dff1ff'/%3E%3Ccircle cx='420' cy='106' r='60' fill='%23dff1ff'/%3E%3Ccircle cx='0' cy='128' r='60' fill='%23ffffff'/%3E%3Ccircle cx='70' cy='118' r='48' fill='%23ffffff'/%3E%3Ccircle cx='130' cy='98' r='58' fill='%23ffffff'/%3E%3Ccircle cx='200' cy='120' r='50' fill='%23ffffff'/%3E%3Ccircle cx='260' cy='104' r='62' fill='%23ffffff'/%3E%3Ccircle cx='330' cy='124' r='50' fill='%23ffffff'/%3E%3Ccircle cx='380' cy='112' r='46' fill='%23ffffff'/%3E%3Ccircle cx='420' cy='128' r='60' fill='%23ffffff'/%3E%3Crect y='150' width='420' height='30' fill='%23ffffff'/%3E%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='340' viewBox='0 0 300 340'%3E%3Cpolygon points='40.0,28.0 43.2,35.6 51.4,36.3 45.1,41.7 47.1,49.7 40.0,45.4 32.9,49.7 34.9,41.7 28.6,36.3 36.8,35.6' fill='%23fff' opacity='0.9' stroke-linejoin='round'/%3E%3Cpath d='M250 22C251.2 28.8 251.2 28.8 258 30C251.2 31.2 251.2 31.2 250 38C248.8 31.2 248.8 31.2 242 30C248.8 28.8 248.8 28.8 250 22z' fill='%23ffd43b' opacity='0.9'/%3E%3Cpolygon points='270.0,141.0 272.4,146.7 278.6,147.2 273.9,151.3 275.3,157.3 270.0,154.1 264.7,157.3 266.1,151.3 261.4,147.2 267.6,146.7' fill='%23bfe3ff' opacity='0.9' stroke-linejoin='round'/%3E%3Cpath d='M30 179C31.65 188.35 31.65 188.35 41 190C31.65 191.65 31.65 191.65 30 201C28.35 191.65 28.35 191.65 19 190C28.35 188.35 28.35 188.35 30 179z' fill='%23fff' opacity='0.9'/%3E%3Cpolygon points='150.0,241.0 152.4,246.7 158.6,247.2 153.9,251.3 155.3,257.3 150.0,254.1 144.7,257.3 146.1,251.3 141.4,247.2 147.6,246.7' fill='%23ffd43b' opacity='0.9' stroke-linejoin='round'/%3E%3Cpath d='M200 292C201.2 298.8 201.2 298.8 208 300C201.2 301.2 201.2 301.2 200 308C198.8 301.2 198.8 301.2 192 300C198.8 298.8 198.8 298.8 200 292z' fill='%23bfe3ff' opacity='0.9'/%3E%3Cpolygon points='90.0,308.0 93.2,315.6 101.4,316.3 95.1,321.7 97.1,329.7 90.0,325.4 82.9,329.7 84.9,321.7 78.6,316.3 86.8,315.6' fill='%23fff' opacity='0.9' stroke-linejoin='round'/%3E%3Cpath d='M140 102C141.2 108.8 141.2 108.8 148 110C141.2 111.2 141.2 111.2 140 118C138.8 111.2 138.8 111.2 132 110C138.8 108.8 138.8 108.8 140 102z' fill='%23ffd43b' opacity='0.9'/%3E%3Cpolygon points='210.0,201.0 212.4,206.7 218.6,207.2 213.9,211.3 215.3,217.3 210.0,214.1 204.7,217.3 206.1,211.3 201.4,207.2 207.6,206.7' fill='%23bfe3ff' opacity='0.9' stroke-linejoin='round'/%3E%3Cpath d='M60 99C61.65 108.35 61.65 108.35 71 110C61.65 111.65 61.65 111.65 60 121C58.35 111.65 58.35 111.65 49 110C58.35 108.35 58.35 108.35 60 99z' fill='%23fff' opacity='0.9'/%3E%3C/svg%3E"),
+    linear-gradient(180deg, #1673f2 0%, #46b4fb 45%, #9fdcfd 100%);
 }
 .st-bg.aqua::before {
-  background-color: #4cc3ea;
-  background-image: url("./art/bg/aqua-blue-waves.webp");
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='420' height='180' viewBox='0 0 420 180'%3E%3Cpath d='M0 70C105 54 105 54 210 70S315 86 420 70V180H0z' fill='%2356b8f2'/%3E%3Cpath d='M0 100C105 87 105 87 210 100S315 113 420 100V180H0z' fill='%232f86ea'/%3E%3Cpath d='M0 130C105 120 105 120 210 130S315 140 420 130V180H0z' fill='%231660dc'/%3E%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='340' viewBox='0 0 300 340'%3E%3Cpolygon points='40.0,28.0 43.2,35.6 51.4,36.3 45.1,41.7 47.1,49.7 40.0,45.4 32.9,49.7 34.9,41.7 28.6,36.3 36.8,35.6' fill='%23fff' opacity='0.9' stroke-linejoin='round'/%3E%3Cpath d='M250 22C251.2 28.8 251.2 28.8 258 30C251.2 31.2 251.2 31.2 250 38C248.8 31.2 248.8 31.2 242 30C248.8 28.8 248.8 28.8 250 22z' fill='%23ffd43b' opacity='0.9'/%3E%3Cpolygon points='270.0,141.0 272.4,146.7 278.6,147.2 273.9,151.3 275.3,157.3 270.0,154.1 264.7,157.3 266.1,151.3 261.4,147.2 267.6,146.7' fill='%23c9f7ff' opacity='0.9' stroke-linejoin='round'/%3E%3Cpath d='M30 179C31.65 188.35 31.65 188.35 41 190C31.65 191.65 31.65 191.65 30 201C28.35 191.65 28.35 191.65 19 190C28.35 188.35 28.35 188.35 30 179z' fill='%23fff' opacity='0.9'/%3E%3Cpolygon points='150.0,241.0 152.4,246.7 158.6,247.2 153.9,251.3 155.3,257.3 150.0,254.1 144.7,257.3 146.1,251.3 141.4,247.2 147.6,246.7' fill='%23ffd43b' opacity='0.9' stroke-linejoin='round'/%3E%3Cpath d='M200 292C201.2 298.8 201.2 298.8 208 300C201.2 301.2 201.2 301.2 200 308C198.8 301.2 198.8 301.2 192 300C198.8 298.8 198.8 298.8 200 292z' fill='%23c9f7ff' opacity='0.9'/%3E%3Cpolygon points='90.0,308.0 93.2,315.6 101.4,316.3 95.1,321.7 97.1,329.7 90.0,325.4 82.9,329.7 84.9,321.7 78.6,316.3 86.8,315.6' fill='%23fff' opacity='0.9' stroke-linejoin='round'/%3E%3Cpath d='M140 102C141.2 108.8 141.2 108.8 148 110C141.2 111.2 141.2 111.2 140 118C138.8 111.2 138.8 111.2 132 110C138.8 108.8 138.8 108.8 140 102z' fill='%23ffd43b' opacity='0.9'/%3E%3Cpolygon points='210.0,201.0 212.4,206.7 218.6,207.2 213.9,211.3 215.3,217.3 210.0,214.1 204.7,217.3 206.1,211.3 201.4,207.2 207.6,206.7' fill='%23c9f7ff' opacity='0.9' stroke-linejoin='round'/%3E%3Cpath d='M60 99C61.65 108.35 61.65 108.35 71 110C61.65 111.65 61.65 111.65 60 121C58.35 111.65 58.35 111.65 49 110C58.35 108.35 58.35 108.35 60 99z' fill='%23fff' opacity='0.9'/%3E%3C/svg%3E"),
+    linear-gradient(180deg, #1590e8 0%, #5fd6ec 50%, #a8f3ee 100%);
 }
 .st-bg.purple::before {
-  background-color: #a9b2fb;
-  background-image: url("./art/bg/dreamy-purple-clouds.webp");
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='420' height='180' viewBox='0 0 420 180'%3E%3Ccircle cx='0' cy='106' r='60' fill='%23cfc8ff'/%3E%3Ccircle cx='70' cy='96' r='48' fill='%23cfc8ff'/%3E%3Ccircle cx='130' cy='76' r='58' fill='%23cfc8ff'/%3E%3Ccircle cx='200' cy='98' r='50' fill='%23cfc8ff'/%3E%3Ccircle cx='260' cy='82' r='62' fill='%23cfc8ff'/%3E%3Ccircle cx='330' cy='102' r='50' fill='%23cfc8ff'/%3E%3Ccircle cx='380' cy='90' r='46' fill='%23cfc8ff'/%3E%3Ccircle cx='420' cy='106' r='60' fill='%23cfc8ff'/%3E%3Ccircle cx='0' cy='128' r='60' fill='%23f4f2ff'/%3E%3Ccircle cx='70' cy='118' r='48' fill='%23f4f2ff'/%3E%3Ccircle cx='130' cy='98' r='58' fill='%23f4f2ff'/%3E%3Ccircle cx='200' cy='120' r='50' fill='%23f4f2ff'/%3E%3Ccircle cx='260' cy='104' r='62' fill='%23f4f2ff'/%3E%3Ccircle cx='330' cy='124' r='50' fill='%23f4f2ff'/%3E%3Ccircle cx='380' cy='112' r='46' fill='%23f4f2ff'/%3E%3Ccircle cx='420' cy='128' r='60' fill='%23f4f2ff'/%3E%3Crect y='150' width='420' height='30' fill='%23f4f2ff'/%3E%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='340' viewBox='0 0 300 340'%3E%3Cpolygon points='40.0,28.0 43.2,35.6 51.4,36.3 45.1,41.7 47.1,49.7 40.0,45.4 32.9,49.7 34.9,41.7 28.6,36.3 36.8,35.6' fill='%23fff' opacity='0.9' stroke-linejoin='round'/%3E%3Cpath d='M250 22C251.2 28.8 251.2 28.8 258 30C251.2 31.2 251.2 31.2 250 38C248.8 31.2 248.8 31.2 242 30C248.8 28.8 248.8 28.8 250 22z' fill='%23ffd43b' opacity='0.9'/%3E%3Cpolygon points='270.0,141.0 272.4,146.7 278.6,147.2 273.9,151.3 275.3,157.3 270.0,154.1 264.7,157.3 266.1,151.3 261.4,147.2 267.6,146.7' fill='%23e3d9ff' opacity='0.9' stroke-linejoin='round'/%3E%3Cpath d='M30 179C31.65 188.35 31.65 188.35 41 190C31.65 191.65 31.65 191.65 30 201C28.35 191.65 28.35 191.65 19 190C28.35 188.35 28.35 188.35 30 179z' fill='%23fff' opacity='0.9'/%3E%3Cpolygon points='150.0,241.0 152.4,246.7 158.6,247.2 153.9,251.3 155.3,257.3 150.0,254.1 144.7,257.3 146.1,251.3 141.4,247.2 147.6,246.7' fill='%23ffd43b' opacity='0.9' stroke-linejoin='round'/%3E%3Cpath d='M200 292C201.2 298.8 201.2 298.8 208 300C201.2 301.2 201.2 301.2 200 308C198.8 301.2 198.8 301.2 192 300C198.8 298.8 198.8 298.8 200 292z' fill='%23e3d9ff' opacity='0.9'/%3E%3Cpolygon points='90.0,308.0 93.2,315.6 101.4,316.3 95.1,321.7 97.1,329.7 90.0,325.4 82.9,329.7 84.9,321.7 78.6,316.3 86.8,315.6' fill='%23fff' opacity='0.9' stroke-linejoin='round'/%3E%3Cpath d='M140 102C141.2 108.8 141.2 108.8 148 110C141.2 111.2 141.2 111.2 140 118C138.8 111.2 138.8 111.2 132 110C138.8 108.8 138.8 108.8 140 102z' fill='%23ffd43b' opacity='0.9'/%3E%3Cpolygon points='210.0,201.0 212.4,206.7 218.6,207.2 213.9,211.3 215.3,217.3 210.0,214.1 204.7,217.3 206.1,211.3 201.4,207.2 207.6,206.7' fill='%23e3d9ff' opacity='0.9' stroke-linejoin='round'/%3E%3Cpath d='M60 99C61.65 108.35 61.65 108.35 71 110C61.65 111.65 61.65 111.65 60 121C58.35 111.65 58.35 111.65 49 110C58.35 108.35 58.35 108.35 60 99z' fill='%23fff' opacity='0.9'/%3E%3C/svg%3E"),
+    linear-gradient(180deg, #5f6bfa 0%, #9aa5fc 50%, #d6dbff 100%);
 }
 .st-bg.gold::before {
-  background-color: #fde27a;
-  background-image: url("./art/bg/sunshine-golden-waves.webp");
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='420' height='180' viewBox='0 0 420 180'%3E%3Cpath d='M0 70C105 54 105 54 210 70S315 86 420 70V180H0z' fill='%23ffc145'/%3E%3Cpath d='M0 100C105 87 105 87 210 100S315 113 420 100V180H0z' fill='%23ff9a24'/%3E%3Cpath d='M0 130C105 120 105 120 210 130S315 140 420 130V180H0z' fill='%23fb6d0a'/%3E%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='340' viewBox='0 0 300 340'%3E%3Cpolygon points='40.0,28.0 43.2,35.6 51.4,36.3 45.1,41.7 47.1,49.7 40.0,45.4 32.9,49.7 34.9,41.7 28.6,36.3 36.8,35.6' fill='%23fff' opacity='0.9' stroke-linejoin='round'/%3E%3Cpath d='M250 22C251.2 28.8 251.2 28.8 258 30C251.2 31.2 251.2 31.2 250 38C248.8 31.2 248.8 31.2 242 30C248.8 28.8 248.8 28.8 250 22z' fill='%23ff9f1c' opacity='0.9'/%3E%3Cpolygon points='270.0,141.0 272.4,146.7 278.6,147.2 273.9,151.3 275.3,157.3 270.0,154.1 264.7,157.3 266.1,151.3 261.4,147.2 267.6,146.7' fill='%23fff6c9' opacity='0.9' stroke-linejoin='round'/%3E%3Cpath d='M30 179C31.65 188.35 31.65 188.35 41 190C31.65 191.65 31.65 191.65 30 201C28.35 191.65 28.35 191.65 19 190C28.35 188.35 28.35 188.35 30 179z' fill='%23fff' opacity='0.9'/%3E%3Cpolygon points='150.0,241.0 152.4,246.7 158.6,247.2 153.9,251.3 155.3,257.3 150.0,254.1 144.7,257.3 146.1,251.3 141.4,247.2 147.6,246.7' fill='%23ff9f1c' opacity='0.9' stroke-linejoin='round'/%3E%3Cpath d='M200 292C201.2 298.8 201.2 298.8 208 300C201.2 301.2 201.2 301.2 200 308C198.8 301.2 198.8 301.2 192 300C198.8 298.8 198.8 298.8 200 292z' fill='%23fff6c9' opacity='0.9'/%3E%3Cpolygon points='90.0,308.0 93.2,315.6 101.4,316.3 95.1,321.7 97.1,329.7 90.0,325.4 82.9,329.7 84.9,321.7 78.6,316.3 86.8,315.6' fill='%23fff' opacity='0.9' stroke-linejoin='round'/%3E%3Cpath d='M140 102C141.2 108.8 141.2 108.8 148 110C141.2 111.2 141.2 111.2 140 118C138.8 111.2 138.8 111.2 132 110C138.8 108.8 138.8 108.8 140 102z' fill='%23ff9f1c' opacity='0.9'/%3E%3Cpolygon points='210.0,201.0 212.4,206.7 218.6,207.2 213.9,211.3 215.3,217.3 210.0,214.1 204.7,217.3 206.1,211.3 201.4,207.2 207.6,206.7' fill='%23fff6c9' opacity='0.9' stroke-linejoin='round'/%3E%3Cpath d='M60 99C61.65 108.35 61.65 108.35 71 110C61.65 111.65 61.65 111.65 60 121C58.35 111.65 58.35 111.65 49 110C58.35 108.35 58.35 108.35 60 99z' fill='%23fff' opacity='0.9'/%3E%3C/svg%3E"),
+    linear-gradient(180deg, #f3b21b 0%, #fdd75a 45%, #fff3a8 100%);
 }
 .st-app .st-head {
   background:
-    url("./art/bg/deep-blue-clouds.webp") center 30% / cover no-repeat,
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='200' viewBox='0 0 300 200'%3E%3Cpolygon points='40.0,24.0 41.6,27.8 45.7,28.1 42.6,30.8 43.5,34.9 40.0,32.7 36.5,34.9 37.4,30.8 34.3,28.1 38.4,27.8' fill='%23ffffff' opacity='0.45' stroke-linejoin='round'/%3E%3Cpath d='M250 15C251.05 20.95 251.05 20.95 257 22C251.05 23.05 251.05 23.05 250 29C248.95 23.05 248.95 23.05 243 22C248.95 20.95 248.95 20.95 250 15z' fill='%23ffd43b' opacity='0.5'/%3E%3Cpolygon points='275.0,115.0 276.3,118.2 279.8,118.5 277.1,120.7 277.9,124.0 275.0,122.2 272.1,124.0 272.9,120.7 270.2,118.5 273.7,118.2' fill='%23cfe3ff' opacity='0.45' stroke-linejoin='round'/%3E%3Cpath d='M20 145C20.75 149.25 20.75 149.25 25 150C20.75 150.75 20.75 150.75 20 155C19.25 150.75 19.25 150.75 15 150C19.25 149.25 19.25 149.25 20 145z' fill='%23ffffff' opacity='0.5'/%3E%3Cpolygon points='150.0,174.0 151.6,177.8 155.7,178.1 152.6,180.8 153.5,184.9 150.0,182.7 146.5,184.9 147.4,180.8 144.3,178.1 148.4,177.8' fill='%23ffd43b' opacity='0.45' stroke-linejoin='round'/%3E%3Cpath d='M205 85C205.75 89.25 205.75 89.25 210 90C205.75 90.75 205.75 90.75 205 95C204.25 90.75 204.25 90.75 200 90C204.25 89.25 204.25 89.25 205 85z' fill='%23cfe3ff' opacity='0.5'/%3E%3C/svg%3E") center top / 300px 200px repeat,
+    radial-gradient(circle at 85% 0%, rgba(255, 255, 255, 0.28), transparent 45%),
     linear-gradient(160deg, #4b8dfb 0%, #2f6ff0 45%, #1f55d6 100%);
-}
-.st-meadow {
-  background: url("./art/bg/green-hills.webp") center bottom / 100% auto no-repeat;
-}
-.st-meadow-hill {
-  visibility: hidden;
 }
 .st-bg .st-login-title h1 {
   color: #fff;
@@ -938,8 +957,11 @@
   max-width: none;
 }
 .st-meadow + .st-cheer .st-cheer-wave {
-  background: #5bd21b;
+  background: #5cc23c;
 }
 .st-center img {
   margin: 0 auto;
+}
+.st-app .st-retry {
+  margin-top: 8px;
 }

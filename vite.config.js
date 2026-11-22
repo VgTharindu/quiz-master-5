@@ -2,9 +2,9 @@ import { fileURLToPath, URL } from "node:url";
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 
-// For returning students (localStorage "me" is set), injects a tiny inline script that
-// modulepreloads the student chunks alongside the entry file. Without it they are requested
-// only after the entry runs, adding a full round trip on slow networks. New visitors are unaffected.
+// Injects a tiny inline script that modulepreloads the student chunks alongside the entry file,
+// so tapping "start" does not wait for a download. Returning students (localStorage "me" is set)
+// get them at high priority; new visitors at low priority, after the landing page artwork.
 function preloadStudentChunks() {
   return {
     name: "preload-student-chunks",
@@ -24,7 +24,7 @@ function preloadStudentChunks() {
         };
         walk(entry.fileName);
         const urls = JSON.stringify([...files].map((f) => "/" + f));
-        const script = `<script>try{if(localStorage.getItem("me"))${urls}.forEach(function(u){var l=document.createElement("link");l.rel="modulepreload";l.href=u;l.crossOrigin="";document.head.appendChild(l)})}catch(e){}</script>`;
+        const script = `<script>try{var r=localStorage.getItem("me");${urls}.forEach(function(u){var l=document.createElement("link");l.rel="modulepreload";l.href=u;l.crossOrigin="";if(!r)l.fetchPriority="low";document.head.appendChild(l)})}catch(e){}</script>`;
         return html.replace("</head>", script + "</head>");
       },
     },

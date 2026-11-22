@@ -6,6 +6,7 @@ import ErrorBoundary from "@/components/ErrorBoundary";
 import NetworkBanner from "@/components/NetworkBanner";
 import { lazyWithRetry } from "@/lib/lazyWithRetry";
 import { loadStudent } from "@/features/student/studentStorage";
+import { useBackHandler } from "@/hooks/useBackHandler";
 
 // Student and teacher views are separate chunks, so the landing page ships with minimal JS.
 const loadStudentApp = () => import("@/features/student/StudentApp");
@@ -32,6 +33,7 @@ export default function App() {
     setSplash(false);
   }, []);
   const exit = () => setRole(null);
+  useBackHandler(role !== null, exit);
 
   useEffect(() => {
     // Most visitors are students: prefetch their chunk while idle so navigation feels instant.

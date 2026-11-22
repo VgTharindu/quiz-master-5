@@ -299,8 +299,8 @@ export function PetsMeadow() {
   return (
     <div className="st-meadow" aria-hidden="true">
       <svg className="st-meadow-hill" viewBox="0 0 400 70" preserveAspectRatio="none">
-        <path d="M0 40C70 10 140 20 200 34S330 18 400 30V70H0z" fill="#A7E3B4" />
-        <path d="M0 54C90 34 170 44 240 54S350 44 400 50V70H0z" fill="#7ED38F" />
+        <path d="M0 40C70 10 140 20 200 34S330 18 400 30V70H0z" fill="#9BE26B" />
+        <path d="M0 54C90 34 170 44 240 54S350 44 400 50V70H0z" fill="#5CC23C" />
       </svg>
       <div className="st-meadow-pets">
         <Art name="duckling" size={52} fallback={null} />

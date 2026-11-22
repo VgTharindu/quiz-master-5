@@ -1,5 +1,6 @@
 import PdfButton from "@/components/PdfButton";
 import { formatDuration } from "@/utils/format";
+import { coinsLoading } from "../reports/reportData";
 import { TestAnalysisSheet } from "../reports/sheets";
 
 const barColor = (pc) => (pc >= 70 ? "#16a34a" : pc >= 40 ? "#facc15" : "#dc2626");
@@ -16,7 +17,9 @@ export default function AnalysisTab({ report }) {
   return (
     <>
       <div className="t-actions">
-        <PdfButton fileName={`Analysis_${test.name}`} render={() => <TestAnalysisSheet report={report} />} />
+        <PdfButton
+          waiting={coinsLoading(report.rows) ? "Coins ගණන් කරමින්…" : ""}
+          fileName={`Analysis_${test.name}`} render={() => <TestAnalysisSheet report={report} />} />
       </div>
       <div className="stat-grid">
         {items.map(([label, value]) => (

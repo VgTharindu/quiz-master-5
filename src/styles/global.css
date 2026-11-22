@@ -236,3 +236,8 @@ th {
   color: #dc2626;
   font-weight: 600;
 }
+.card .err {
+  margin: 4px 0 10px;
+  color: #c0262d;
+  font-weight: 600;
+}

@@ -19,17 +19,25 @@ export default function StudentHome({ me, go, change, exit }) {
   const [cached] = useState(() => readCache(me.grade));
   const [tests, setTests] = useState(cached?.tests || []);
   const [tab, setTab] = useState(0);
+  // "loading" until the first answer when nothing is cached, "error" if that first load fails.
+  const [status, setStatus] = useState(cached ? "ok" : "loading");
+  const opening = useRef(false);
   const offset = useRef(cached?.offset || 0); // server time minus device time (ms)
   const coins = useCoinTotal(me);
   useTicker(1000);
 
   const load = () =>
     rpc("list_tests", { g: me.grade }).then(({ data, error }) => {
-      if (error) return; // keep showing the cached list while offline
+      if (error) return setStatus((s) => (s === "ok" ? s : "error")); // keep showing a cached list
       if (data?.length) offset.current = new Date(data[0].now_ts) - Date.now();
       setTests(data || []);
+      setStatus("ok");
       writeCache(me.grade, { tests: data || [], offset: offset.current });
     });
+  const retry = () => {
+    setStatus("loading");
+    load();
+  };
   useEffect(() => {
     load();
     // Poll every 30s, but skip while the app is in the background to save mobile data.
@@ -57,11 +65,14 @@ export default function StudentHome({ me, go, change, exit }) {
   const list = tab ? past : upcoming;
 
   async function open(test, page) {
+    if (opening.current) return; // ignore a second tap while the first is still loading
+    opening.current = true;
     const res = await rpc("start_attempt", {
       tid: test.id,
       nm: me.name,
       g: me.grade,
     });
+    opening.current = false;
     if (!res.error) return go({ page, aid: res.data });
     alert(
       isNetworkError(res)
@@ -96,7 +107,18 @@ export default function StudentHome({ me, go, change, exit }) {
         {!list.length && (
           <div className="st-empty owl">
             <Art name="owl" size={92} fallback={<ReadingOwl size={92} />} />
-            <p>{tab ? "පසුගිය පරීක්ෂණ තවම නැහැ." : "දැනට පරීක්ෂණ නැහැ. සර් අලුත් පරීක්ෂණයක් දාපු ගමන් මෙතන පෙනෙයි!"}</p>
+            {status === "loading" && <p>පරීක්ෂණ ලබාගනිමින්…</p>}
+            {status === "error" && (
+              <div>
+                <p>සම්බන්ධතාවය දුර්වලයි. පරීක්ෂණ ලබාගත නොහැකි විය.</p>
+                <button className="st-pill blue st-retry" onClick={retry}>
+                  නැවත උත්සාහ කරන්න
+                </button>
+              </div>
+            )}
+            {status === "ok" && (
+              <p>{tab ? "පසුගිය පරීක්ෂණ තවම නැහැ." : "දැනට පරීක්ෂණ නැහැ. සර් අලුත් පරීක්ෂණයක් දාපු ගමන් මෙතන පෙනෙයි!"}</p>
+            )}
           </div>
         )}
         {list.map((t, i) => (

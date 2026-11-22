@@ -103,10 +103,10 @@ export default function ResultView({ me, aid, back }) {
           <div>
             {earned > 0 ? (
               <span ref={badgeRef} className="coin-earned">
-                <CoinIcon size={28} /> +{earned} රන් කාසි
+                <CoinIcon size={28} /> +{earned} {earned === 1 ? "Coin" : "Coins"}
               </span>
             ) : (
-              <span className="coin-earned none">මේ පාර කාසි නැහැ. ඊළඟ පාර උත්සාහ කරන්න!</span>
+              <span className="coin-earned none">මේ පාර Coins නැහැ. ඊළඟ පාර උත්සාහ කරන්න!</span>
             )}
           </div>
         </div>
