@@ -303,9 +303,11 @@ export function PetsMeadow() {
         <path d="M0 54C90 34 170 44 240 54S350 44 400 50V70H0z" fill="#7ED38F" />
       </svg>
       <div className="st-meadow-pets">
+        <Art name="duckling" size={52} fallback={null} />
         <Art name="bunny" size={70} fallback={<Bunny size={64} />} />
-        <Art name="puppy" size={90} fallback={<Puppy size={86} />} />
-        <Art name="cat" size={86} fallback={<PeekingCat size={84} />} />
+        <Art name="puppy" size={86} fallback={<Puppy size={86} />} />
+        <Art name="cat" size={78} fallback={<PeekingCat size={84} />} />
+        <Art name="turtle" size={58} fallback={null} />
       </div>
     </div>
   );

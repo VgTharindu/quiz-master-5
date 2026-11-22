@@ -91,6 +91,9 @@ export default function ResultView({ me, aid, back }) {
           ) : (
             <Art name="star-mascot" size={84} fallback={<StarMascot size={84} />} />
           )}</span>
+          <span className="st-result-pal">
+            <Art name={pct >= 50 ? "frog" : "elephant"} size={62} fallback={null} />
+          </span>
           <h1>ඔබේ ප්‍රතිඵලය</h1>
           <ScoreRing pct={pct} label={`${result.score} / ${result.total}`} />
           <p className="st-result-cheer">{cheer(pct)}</p>
