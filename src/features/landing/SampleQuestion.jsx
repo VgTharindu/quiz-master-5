@@ -49,7 +49,7 @@ export default function SampleQuestion({ onStudent }) {
         )}
       </p>
       {done && (
-        <button className="qm-main qm-full" onClick={onStudent}>
+        <button className="qm-cta qm-full" onClick={onStudent}>
           සැබෑ පරීක්ෂණයට යන්න
         </button>
       )}
