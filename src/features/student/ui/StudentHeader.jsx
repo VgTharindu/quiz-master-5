@@ -1,16 +1,18 @@
 import { forwardRef } from "react";
 import CoinCounter from "@/features/coins/CoinCounter";
-import { KidAvatar } from "./icons";
-import { CloudEdge, Sparkles } from "./Decor";
+import { KidAvatar } from "./illustrations";
+import Art from "./Art";
+import { CloudEdge, HeaderDoodles, Sparkles } from "./Decor";
 
 // Blue student header: avatar, name and grade, coin total.
 // The ref points at the coin icon so the coin animation can fly into it.
 const StudentHeader = forwardRef(function StudentHeader({ me, coins, onExit }, coinRef) {
   return (
     <header className="st-head">
+      <HeaderDoodles />
       <Sparkles />
       <div className="st-head-inner">
-        <KidAvatar size={66} />
+        <Art name="kid-avatar" size={66} className="st-avatar-img" fallback={<KidAvatar size={66} />} />
         <div className="st-head-name">
           <b>{me.name}</b>
           <span>{me.grade} වසර</span>

@@ -1,6 +1,7 @@
 // Original cartoon kids and pets for the student screens (inline SVG, no image downloads).
 
-const SKIN = "#F6C59A";
+import Art from "./Art";
+
 const INK = "#2A1B12";
 
 function Eye({ x, y }) {
@@ -12,56 +13,194 @@ function Eye({ x, y }) {
   );
 }
 
+const OUTLINE = "#4A2E1E";
+
+// Shared defs for skin and hair shading; each component gets its own ids.
+function Defs({ id }) {
+  return (
+    <defs>
+      <radialGradient id={id + "skin"} cx="45%" cy="40%" r="65%">
+        <stop offset="0" stopColor="#FFE2C6" />
+        <stop offset="0.7" stopColor="#F7C59B" />
+        <stop offset="1" stopColor="#EBA97A" />
+      </radialGradient>
+      <linearGradient id={id + "hair"} x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stopColor="#5A3826" />
+        <stop offset="1" stopColor="#2E1B10" />
+      </linearGradient>
+      <linearGradient id={id + "shirt"} x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stopColor="#FFFFFF" />
+        <stop offset="1" stopColor="#DCE7F8" />
+      </linearGradient>
+    </defs>
+  );
+}
+
+function BigEye({ x, y }) {
+  return (
+    <g>
+      <ellipse cx={x} cy={y} rx="6.4" ry="7.6" fill="#fff" stroke={OUTLINE} strokeWidth="1.8" />
+      <circle cx={x} cy={y + 0.8} r="5.6" fill="#4A2F22" />
+      <circle cx={x} cy={y + 0.8} r="2.8" fill="#120B07" />
+      <circle cx={x + 2} cy={y - 1.6} r="2" fill="#fff" />
+      <circle cx={x - 1.8} cy={y + 3} r="1" fill="#fff" />
+    </g>
+  );
+}
+
+function Face({ id, smileOpen = true }) {
+  return (
+    <g>
+      <circle cx="18" cy="58" r="8" fill={`url(#${id}skin)`} stroke={OUTLINE} strokeWidth="2" />
+      <circle cx="82" cy="58" r="8" fill={`url(#${id}skin)`} stroke={OUTLINE} strokeWidth="2" />
+      <path
+        d="M50 22c19 0 32 14 32 34 0 21-14 36-32 36S18 77 18 56c0-20 13-34 32-34z"
+        fill={`url(#${id}skin)`}
+        stroke={OUTLINE}
+        strokeWidth="2.4"
+      />
+      <path d="M33 50q6-5 12-1M55 49q6-4 12 1" stroke={OUTLINE} strokeWidth="3" fill="none" strokeLinecap="round" />
+      <BigEye x={39} y={60} />
+      <BigEye x={61} y={60} />
+      <path d="M49 67q2 3 4 1" stroke="#C47A55" strokeWidth="1.8" fill="none" strokeLinecap="round" />
+      <ellipse cx="29" cy="73" rx="6" ry="3.6" fill="#FF8A80" opacity=".45" />
+      <ellipse cx="71" cy="73" rx="6" ry="3.6" fill="#FF8A80" opacity=".45" />
+      {smileOpen ? (
+        <g>
+          <path d="M39 74q11 14 22 0z" fill="#8E1F1F" stroke={OUTLINE} strokeWidth="2" strokeLinejoin="round" />
+          <path d="M41 75h18l-1.5 3h-15z" fill="#fff" />
+          <ellipse cx="50" cy="81.5" rx="5" ry="2.6" fill="#F27C86" />
+        </g>
+      ) : (
+        <path d="M41 75q9 8 18 0" stroke={OUTLINE} strokeWidth="2.4" fill="none" strokeLinecap="round" />
+      )}
+    </g>
+  );
+}
+
+// Head is drawn in a 100x100 box; place it with a transform.
+export function BoyHead({ id = "b" }) {
+  return (
+    <g>
+      <Defs id={id} />
+      <Face id={id} />
+      <path
+        d="M17 54c-4-22 8-38 26-40l2-9 7 7 7-7 2 9c18 3 28 18 23 40-5-9-12-14-20-15-3 5-12 9-22 8-9 1-17 3-25 7z"
+        fill={`url(#${id}hair)`}
+        stroke={OUTLINE}
+        strokeWidth="2.2"
+        strokeLinejoin="round"
+      />
+      <path d="M36 20q10-5 20-2" stroke="#8A5A3C" strokeWidth="3" fill="none" strokeLinecap="round" opacity=".8" />
+    </g>
+  );
+}
+
+export function GirlHead({ id = "g" }) {
+  return (
+    <g>
+      <Defs id={id} />
+      <path d="M78 34c18 6 22 30 10 48-2-14-8-22-16-26z" fill={`url(#${id}hair)`} stroke={OUTLINE} strokeWidth="2.2" />
+      <ellipse cx="80" cy="36" rx="7" ry="5" fill="#2F64D6" stroke={OUTLINE} strokeWidth="1.6" transform="rotate(-30 80 36)" />
+      <Face id={id} smileOpen={false} />
+      <path
+        d="M17 58c-5-24 10-42 33-42s38 16 33 40c-5-10-12-16-22-18-8 7-24 8-35 12-4 2-7 5-9 8z"
+        fill={`url(#${id}hair)`}
+        stroke={OUTLINE}
+        strokeWidth="2.2"
+        strokeLinejoin="round"
+      />
+      <path d="M32 26q12-7 26-4" stroke="#8A5A3C" strokeWidth="3" fill="none" strokeLinecap="round" opacity=".8" />
+      <path d="M33 53l-3-3M67 53l3-3" stroke={OUTLINE} strokeWidth="1.6" strokeLinecap="round" />
+    </g>
+  );
+}
+
+function Shirt({ id, tie = true }) {
+  return (
+    <g>
+      <path d="M42 50h16v20H42z" fill="#EBB083" stroke={OUTLINE} strokeWidth="2" />
+      <path d="M8 100c2-24 18-36 42-36s40 12 42 36z" fill={`url(#${id}shirt)`} stroke={OUTLINE} strokeWidth="2.2" />
+      <path d="M38 66l12 10 12-10" fill="#fff" stroke={OUTLINE} strokeWidth="2" strokeLinejoin="round" />
+      {tie && <path d="M47 76h6l3 22h-12z" fill="#2F64D6" stroke={OUTLINE} strokeWidth="1.6" />}
+    </g>
+  );
+}
+
+// Header avatar: smiling student with a school bag.
+export function KidAvatar({ size = 64 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 100 100" aria-hidden="true" style={{ display: "block", flex: "none" }}>
+      <defs>
+        <radialGradient id="avbg" cx="50%" cy="35%" r="70%">
+          <stop offset="0" stopColor="#F2F8FF" />
+          <stop offset="1" stopColor="#BFD7FF" />
+        </radialGradient>
+        <clipPath id="avclip">
+          <circle cx="50" cy="50" r="46" />
+        </clipPath>
+      </defs>
+      <circle cx="50" cy="50" r="48" fill="#fff" />
+      <circle cx="50" cy="50" r="46" fill="url(#avbg)" />
+      <g clipPath="url(#avclip)">
+        <g transform="translate(6 30) scale(0.88)">
+          <path d="M14 100c0-20 6-34 14-38M86 100c0-20-6-34-14-38" stroke="#2F64D6" strokeWidth="9" fill="none" />
+          <Shirt id="av" />
+        </g>
+        <g transform="translate(8 0) scale(0.84)">
+          <BoyHead id="av" />
+        </g>
+      </g>
+    </svg>
+  );
+}
+
 // Boy with a tablet and a girl with a book, studying at a desk.
 export function KidsAtDesk({ width = 320 }) {
   return (
-    <svg width={width} viewBox="0 0 320 190" aria-hidden="true" style={{ display: "block", maxWidth: "100%" }}>
-      {/* bushes */}
-      <circle cx="18" cy="150" r="28" fill="#7ED38F" />
-      <circle cx="44" cy="160" r="22" fill="#5FC277" />
-      <circle cx="300" cy="148" r="30" fill="#7ED38F" />
-      <circle cx="276" cy="162" r="20" fill="#5FC277" />
+    <svg width={width} viewBox="0 0 320 200" aria-hidden="true" style={{ display: "block", maxWidth: "100%" }}>
+      <defs>
+        <linearGradient id="kdesk" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stopColor="#E0A46B" />
+          <stop offset="1" stopColor="#B4763F" />
+        </linearGradient>
+        <radialGradient id="kbush" cx="40%" cy="30%" r="70%">
+          <stop offset="0" stopColor="#9BE3A6" />
+          <stop offset="1" stopColor="#45B060" />
+        </radialGradient>
+      </defs>
+      <circle cx="20" cy="150" r="30" fill="url(#kbush)" />
+      <circle cx="48" cy="164" r="22" fill="url(#kbush)" />
+      <circle cx="300" cy="146" r="32" fill="url(#kbush)" />
+      <circle cx="272" cy="164" r="22" fill="url(#kbush)" />
       {/* boy */}
-      <g transform="translate(62 18)">
-        <path d="M14 150c2-34 16-52 38-52s36 18 38 52z" fill="#fff" stroke="#DCE6F7" strokeWidth="2" />
-        <path d="M46 98l6 10 6-10" fill="#2F64D6" />
-        <path d="M49 106h6l3 26h-12z" fill="#2F64D6" />
-        <circle cx="52" cy="62" r="34" fill={SKIN} />
-        <path d="M18 58c-2-28 18-42 36-40 22 2 34 18 32 38-6-10-14-15-22-14-4 6-16 9-26 7-8 3-14 6-20 9z" fill="#3A2A20" />
-        <Eye x={40} y={66} />
-        <Eye x={64} y={66} />
-        <ellipse cx="31" cy="78" rx="5" ry="3" fill="#F59C8C" opacity=".6" />
-        <ellipse cx="73" cy="78" rx="5" ry="3" fill="#F59C8C" opacity=".6" />
-        <path d="M42 80q10 10 20 0" fill="#C2410C" stroke={INK} strokeWidth="2" strokeLinecap="round" />
-        <circle cx="17" cy="64" r="6" fill={SKIN} />
-        <circle cx="87" cy="64" r="6" fill={SKIN} />
-        {/* tablet */}
-        <rect x="26" y="116" width="54" height="38" rx="6" fill="#1F2A44" />
-        <rect x="31" y="121" width="44" height="28" rx="3" fill="#4F86F7" />
-        <circle cx="26" cy="132" r="7" fill={SKIN} />
-        <circle cx="80" cy="132" r="7" fill={SKIN} />
+      <g transform="translate(46 28) scale(1.12)">
+        <Shirt id="kb" />
+      </g>
+      <g transform="translate(54 6) scale(1)">
+        <BoyHead id="kb" />
+      </g>
+      <g>
+        <rect x="70" y="138" width="62" height="42" rx="7" fill="#22304F" stroke={OUTLINE} strokeWidth="2" />
+        <rect x="75" y="143" width="52" height="32" rx="3" fill="#5B93FF" />
+        <path d="M80 148l18 0" stroke="#fff" strokeWidth="3" strokeLinecap="round" opacity=".7" />
+        <circle cx="70" cy="156" r="8" fill="#F7C59B" stroke={OUTLINE} strokeWidth="2" />
+        <circle cx="132" cy="156" r="8" fill="#F7C59B" stroke={OUTLINE} strokeWidth="2" />
       </g>
       {/* girl */}
-      <g transform="translate(168 22)">
-        <path d="M12 146c2-32 16-50 38-50s36 18 38 50z" fill="#fff" stroke="#DCE6F7" strokeWidth="2" />
-        <path d="M40 96h20l-10 12z" fill="#2F64D6" />
-        <path d="M84 40c14 4 20 20 14 40-4-12-10-18-16-20z" fill="#2B1D16" />
-        <circle cx="50" cy="60" r="33" fill={SKIN} />
-        <path d="M16 60c-4-26 14-42 34-42s38 14 34 40c-4-10-12-18-24-20-10 8-28 10-44 22z" fill="#2B1D16" />
-        <path d="M24 30q26-18 54 2" stroke="#2F64D6" strokeWidth="6" fill="none" strokeLinecap="round" />
-        <Eye x={38} y={64} />
-        <Eye x={62} y={64} />
-        <ellipse cx="29" cy="76" rx="5" ry="3" fill="#F59C8C" opacity=".7" />
-        <ellipse cx="71" cy="76" rx="5" ry="3" fill="#F59C8C" opacity=".7" />
-        <path d="M41 78q9 9 18 0" fill="none" stroke="#B5442E" strokeWidth="2.6" strokeLinecap="round" />
+      <g transform="translate(166 34) scale(1.08)">
+        <Shirt id="kg" />
       </g>
-      {/* desk with an open book */}
-      <rect x="20" y="166" width="280" height="14" rx="5" fill="#C98B55" />
-      <rect x="20" y="176" width="280" height="10" rx="4" fill="#A86E3D" />
-      <path d="M190 166c10-8 24-10 36-4 12-6 26-4 36 4z" fill="#fff" stroke="#9DB5E8" strokeWidth="2" />
-      <path d="M226 162v4" stroke="#9DB5E8" strokeWidth="2" />
-      <circle cx="210" cy="158" r="7" fill={SKIN} />
-      <circle cx="244" cy="158" r="7" fill={SKIN} />
+      <g transform="translate(172 10) scale(0.96)">
+        <GirlHead id="kg" />
+      </g>
+      {/* desk and book */}
+      <rect x="18" y="176" width="284" height="14" rx="5" fill="url(#kdesk)" stroke={OUTLINE} strokeWidth="2" />
+      <path d="M188 176c12-9 28-11 40-4 12-7 28-5 40 4z" fill="#fff" stroke={OUTLINE} strokeWidth="2" strokeLinejoin="round" />
+      <path d="M228 172v4" stroke={OUTLINE} strokeWidth="2" />
+      <path d="M186 178h84" stroke="#2F9E6B" strokeWidth="4" />
+      <circle cx="204" cy="168" r="8" fill="#F7C59B" stroke={OUTLINE} strokeWidth="2" />
+      <circle cx="252" cy="168" r="8" fill="#F7C59B" stroke={OUTLINE} strokeWidth="2" />
     </svg>
   );
 }
@@ -164,9 +303,9 @@ export function PetsMeadow() {
         <path d="M0 54C90 34 170 44 240 54S350 44 400 50V70H0z" fill="#7ED38F" />
       </svg>
       <div className="st-meadow-pets">
-        <Bunny size={64} />
-        <Puppy size={86} />
-        <PeekingCat size={84} />
+        <Art name="bunny" size={70} fallback={<Bunny size={64} />} />
+        <Art name="puppy" size={90} fallback={<Puppy size={86} />} />
+        <Art name="cat" size={86} fallback={<PeekingCat size={84} />} />
       </div>
     </div>
   );

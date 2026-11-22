@@ -4,6 +4,7 @@ import { GRADES } from "@/constants/grades";
 import { BookIcon, BulbIcon, CheckBadge, Chevron, PencilIcon, StarIcon, TrophyIcon, UserIcon } from "./ui/icons";
 import { CheerBanner, Sparkles } from "./ui/Decor";
 import { KidsAtDesk } from "./ui/illustrations";
+import Art from "./ui/Art";
 
 const GRADE_STYLE = {
   3: { tone: "blue", icon: <BookIcon size={34} /> },
@@ -27,7 +28,7 @@ export default function StudentLogin({ done, exit }) {
             QUIZ MASTER <em>5</em>
           </h1>
           <span className="st-login-trophy">
-            <TrophyIcon size={50} />
+            <Art name="trophy" size={50} fallback={<TrophyIcon size={50} />} />
           </span>
         </div>
 
@@ -82,7 +83,7 @@ export default function StudentLogin({ done, exit }) {
             <BulbIcon size={52} />
             <span className="st-bubble">ඉගෙනීම මැජික් වගේ!</span>
           </div>
-          <KidsAtDesk />
+          <Art name="kids-desk" width={320} height={180} fallback={<KidsAtDesk />} />
         </div>
       </div>
       <CheerBanner text="ජයගන්න ඔබට හැකියි!" />

@@ -8,6 +8,7 @@ import { readCachedCoins, useCoins, writeCachedCoins } from "@/features/coins/us
 import StudentHeader from "./ui/StudentHeader";
 import { CheerBanner } from "./ui/Decor";
 import { PetsMeadow } from "./ui/illustrations";
+import Art from "./ui/Art";
 import { MedalIcon, StarMascot, TrophyIcon } from "./ui/icons";
 
 const cheer = (pct) =>
@@ -85,7 +86,11 @@ export default function ResultView({ me, aid, back }) {
       <StudentHeader ref={counterRef} me={me} coins={coins} />
       <div className="st-page">
         <div className="st-result">
-          <span className="st-result-trophy">{pct >= 50 ? <TrophyIcon size={84} /> : <StarMascot size={84} />}</span>
+          <span className="st-result-trophy">{pct >= 50 ? (
+            <Art name="trophy" size={84} fallback={<TrophyIcon size={84} />} />
+          ) : (
+            <Art name="star-mascot" size={84} fallback={<StarMascot size={84} />} />
+          )}</span>
           <h1>ඔබේ ප්‍රතිඵලය</h1>
           <ScoreRing pct={pct} label={`${result.score} / ${result.total}`} />
           <p className="st-result-cheer">{cheer(pct)}</p>

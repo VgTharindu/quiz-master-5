@@ -1,23 +1,24 @@
 import { formatCountdown, formatDateTime } from "@/utils/format";
 import { ENDED, LIVE, UPCOMING, getTestStatus } from "@/constants/testStatus";
 import { BookIcon, CalendarIcon, ChecklistIcon, ClockIcon, MedalIcon, TrophyIcon } from "./ui/icons";
+import Art from "./ui/Art";
 
 const TILES = [
-  ["yellow", TrophyIcon],
-  ["pink", MedalIcon],
-  ["green", ChecklistIcon],
-  ["blue", BookIcon],
+  ["yellow", TrophyIcon, "trophy"],
+  ["pink", MedalIcon, "medal"],
+  ["green", ChecklistIcon, "checklist"],
+  ["blue", BookIcon, "book"],
 ];
 
 export default function StudentTestCard({ test, now, index = 0, onOpen }) {
   const start = new Date(test.start_at),
     end = new Date(test.end_at),
     status = getTestStatus(test, now);
-  const [tone, Icon] = TILES[index % TILES.length];
+  const [tone, Icon, art] = TILES[index % TILES.length];
   return (
     <article className={"st-test" + (status === LIVE ? " live" : "")}>
       <div className={"st-test-tile " + tone}>
-        <Icon size={50} />
+        <Art name={art} size={56} fallback={<Icon size={50} />} />
       </div>
       <div className="st-test-body">
         <h3>{test.name}</h3>
