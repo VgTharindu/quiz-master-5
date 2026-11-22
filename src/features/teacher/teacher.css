@@ -182,3 +182,11 @@
     grid-template-columns: 1fr 2fr;
   }
 }
+.t-app .t-out {
+  background: rgba(255, 255, 255, 0.16);
+  color: #fff;
+  font-size: 14px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  min-height: 36px;
+}

@@ -2,7 +2,8 @@ import { useState } from "react";
 import { exportPdf } from "@/lib/pdf";
 
 // `render` returns the sheet element; it is only built when the button is pressed.
-export default function PdfButton({ render, fileName, label = "📄 PDF", className = "y" }) {
+// `waiting` (a short label) keeps the button disabled until the report data is ready.
+export default function PdfButton({ render, fileName, label = "📄 PDF", className = "y", waiting = "" }) {
   const [busy, setBusy] = useState(false);
   async function run() {
     setBusy(true);
@@ -15,8 +16,8 @@ export default function PdfButton({ render, fileName, label = "📄 PDF", classN
     }
   }
   return (
-    <button className={className} disabled={busy} onClick={run}>
-      {busy ? "PDF සාදමින්…" : label}
+    <button className={className} disabled={busy || Boolean(waiting)} onClick={run}>
+      {busy ? "PDF සාදමින්…" : waiting || label}
     </button>
   );
 }

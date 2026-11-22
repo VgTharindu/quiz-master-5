@@ -3,6 +3,7 @@ import { exportExcel } from "@/utils/excel";
 import { formatDuration } from "@/utils/format";
 import { TestResultSheet } from "../reports/sheets";
 import CoinValue from "../reports/CoinValue";
+import { coinsLoading } from "../reports/reportData";
 
 export default function ResultsTab({ report }) {
   const { test, rows, totalMarks } = report;
@@ -18,7 +19,7 @@ export default function ResultsTab({ report }) {
         "%": r.pct,
         "මුළු කාලය (තත්පර)": Math.round(r.sec),
         "ප්‍රශ්නයකට සාමාන්‍ය (තත්පර)": Math.round(r.perQ),
-        "රන් කාසි": r.coins ?? "",
+        Coins: r.coins ?? "",
       })),
       test.name,
     );
@@ -26,7 +27,9 @@ export default function ResultsTab({ report }) {
   return (
     <>
       <div className="t-actions">
-        <PdfButton fileName={`Results_${test.name}`} render={() => <TestResultSheet report={report} />} />
+        <PdfButton
+          waiting={coinsLoading(report.rows) ? "Coins ගණන් කරමින්…" : ""}
+          fileName={`Results_${test.name}`} render={() => <TestResultSheet report={report} />} />
         <button className="g" onClick={download}>
           📥 Excel
         </button>

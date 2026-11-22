@@ -13,8 +13,10 @@ export function attemptSeconds(attempt, test) {
   return Math.max(0, (end - new Date(attempt.started_at)) / 1000);
 }
 
-// coinMap: Map(nameKey -> coins), or null when coin totals are unavailable.
-export const coinsOf = (coinMap, name) => (coinMap ? coinMap.get(nameKey(name)) ?? 0 : null);
+// coinMap: Map(nameKey -> coins), undefined while loading, null when unavailable.
+export const coinsOf = (coinMap, name) =>
+  coinMap === undefined ? undefined : coinMap ? coinMap.get(nameKey(name)) ?? 0 : null;
+export const coinsLoading = (rows) => rows.some((r) => r.coins === undefined);
 
 // Everything the result sheet and analysis need for one test.
 export function buildTestReport(test, questions, attempts, coinMap = null) {
@@ -106,19 +108,71 @@ export async function fetchMonthTests({ grade, year, month }) {
   return data || [];
 }
 
+const PAGE = 1000;
+const ID_CHUNK = 100;
+
+// Supabase returns at most 1000 rows per request, so larger tables are read page by page.
+async function selectAll(build) {
+  const rows = [];
+  for (let from = 0; ; from += PAGE) {
+    const { data, error } = await build().range(from, from + PAGE - 1);
+    if (error) throw error;
+    rows.push(...(data || []));
+    if (!data || data.length < PAGE) return rows;
+  }
+}
+
+// Long id lists are split so the request URL stays short.
+async function selectIn(table, columns, column, ids, order = "id") {
+  const chunks = [];
+  for (let i = 0; i < ids.length; i += ID_CHUNK) chunks.push(ids.slice(i, i + ID_CHUNK));
+  const parts = await Promise.all(
+    chunks.map((part) => selectAll(() => sb.from(table).select(columns).in(column, part).order(order).order("id"))),
+  );
+  return parts.flat();
+}
+
 export async function fetchTestsData(testIds) {
   if (!testIds.length) return { questions: [], attempts: [] };
-  const [qs, as] = await Promise.all([
-    sb.from("questions").select("*").in("test_id", testIds).order("pos"),
-    sb.from("attempts").select("*").in("test_id", testIds),
+  const [questions, attempts] = await Promise.all([
+    selectIn("questions", "*", "test_id", testIds, "pos"),
+    selectIn("attempts", "*", "test_id", testIds),
   ]);
-  if (qs.error || as.error) throw qs.error || as.error;
-  return { questions: qs.data || [], attempts: as.data || [] };
+  return { questions, attempts };
 }
 
 export async function fetchStudentNames(grade) {
-  const { data } = await sb.from("attempts").select("student").eq("grade", grade);
+  const data = await selectAll(() => sb.from("attempts").select("student").eq("grade", grade).order("id")).catch(() => []);
   const seen = new Map();
-  (data || []).forEach((r) => seen.set(nameKey(r.student), r.student.trim()));
+  data.forEach((r) => seen.set(nameKey(r.student), r.student.trim()));
   return [...seen.values()].sort((a, b) => a.localeCompare(b));
+}
+
+// Same rule as the coin_board SQL function, worked out in the browser.
+// Used when that migration has not been run on the database yet.
+export async function computeCoinBoard(grade) {
+  const attempts = await selectAll(() =>
+    sb.from("attempts").select("test_id, student, finished, answers").eq("grade", grade).order("id"),
+  );
+  const testIds = [...new Set(attempts.map((a) => a.test_id))];
+  if (!testIds.length) return new Map();
+  const [questions, tests] = await Promise.all([
+    selectIn("questions", "id, test_id, correct", "test_id", testIds),
+    selectIn("tests", "id, end_at", "id", testIds),
+  ]);
+  const now = new Date();
+  const ended = new Set(tests.filter((t) => new Date(t.end_at) <= now).map((t) => t.id));
+  const byTest = new Map();
+  questions.forEach((q) => byTest.set(q.test_id, [...(byTest.get(q.test_id) || []), q]));
+  const board = new Map();
+  for (const a of attempts) {
+    if (!a.finished && !ended.has(a.test_id)) continue;
+    const correct = (byTest.get(a.test_id) || []).filter((q) => {
+      const picked = a.answers?.[q.id]?.a;
+      return picked !== undefined && picked !== null && +picked === q.correct;
+    }).length;
+    const key = nameKey(a.student);
+    board.set(key, (board.get(key) || 0) + correct);
+  }
+  return board;
 }

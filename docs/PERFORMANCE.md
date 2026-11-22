@@ -42,7 +42,7 @@ Download වෙන JavaScript ප්‍රමාණය (gzip):
 | Excel library එක on-demand (`await import("xlsx")`) | `src/utils/excel.js` | 143 KB library එකක්, සර්ට විතරයි ඕන |
 | `react` සහ `supabase` වෙනම chunks (`manualChunks`) | `vite.config.js` | App code එක වෙනස් කරලා deploy කළාට මේවා වෙනස් වෙන්නේ නැහැ, phone එකේ cache එකේ තියෙන ඒවාම පාවිච්චි වෙනවා |
 | Home page එක පෙන්වපු ගමන් ළමයාගේ කොටස කලින්ම download කිරීම (`requestIdleCallback`) | `src/App.jsx` | "පරීක්ෂණයට යන්න" ඔබපුවාම එවෙලේම පිටුව පෙනෙනවා |
-| කලින් login වුණ ළමයාට ළමයාගේ chunks එකවර download කරන plugin එක (`preloadStudentChunks`) | `vite.config.js` | Round trip එකක් ඉතුරු වෙනවා (slow 3G එකේ ~0.5-2s) |
+| ළමයාගේ chunks landing page එකත් එක්කම download කරන plugin එක (`preloadStudentChunks`). කලින් login වුණ ළමයාට high priority, අලුත් අයට low priority | `vite.config.js` | "පරීක්ෂණයට යන්න" ඔබපු ගමන් login screen එක පේනවා (slow 3G එකේ 5.9s → 0.1s) |
 | `build.target: "es2020"` | `vite.config.js` | අලුත් browsers වලට කුඩා code |
 
 ### B. Slow / නැවතෙන internet එකට ඔරොත්තු දීම

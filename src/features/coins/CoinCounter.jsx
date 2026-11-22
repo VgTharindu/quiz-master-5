@@ -5,7 +5,7 @@ import "./coins.css";
 // The ref points at the icon so flying coins can aim at it.
 const CoinCounter = forwardRef(function CoinCounter({ value }, ref) {
   return (
-    <span className="coin-counter" aria-label={`රන් කාසි ${value ?? 0}`}>
+    <span className="coin-counter" aria-label={`Coins ${value ?? 0}`}>
       <span ref={ref} className="coin-counter-icon">
         <CoinIcon size={22} />
       </span>

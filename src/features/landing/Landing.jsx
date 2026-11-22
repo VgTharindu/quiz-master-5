@@ -1,6 +1,5 @@
 import Logo from "@/components/Logo";
 import Icon from "./Icon";
-import SampleQuestion from "./SampleQuestion";
 import Sticker from "./Sticker";
 import { FEATURES, SIR } from "./landingData";
 import "./landing.css";
@@ -17,7 +16,7 @@ export default function Landing({ onStudent, onTeacher }) {
             <h1>
               Quiz Master <em>5</em>
             </h1>
-            <p className="qm-ribbon">Learn · Practice · Excel</p>
+            <p className="qm-ribbon">Learn · Practice · Win</p>
           </div>
         </div>
 
@@ -65,11 +64,6 @@ export default function Landing({ onStudent, onTeacher }) {
             </li>
           ))}
         </ul>
-
-        <section className="qm-try">
-          <h2 className="qm-pill purple">උත්සාහ කරලා බලන්න</h2>
-          <SampleQuestion onStudent={onStudent} />
-        </section>
       </main>
 
       <section className="qm-champion" aria-label="Be a Quiz Champion">

@@ -12,7 +12,12 @@
   min-height: 100vh;
   overflow-x: hidden;
   color: var(--text);
-  background: linear-gradient(180deg, #dcecff 0%, #eef5ff 40%, #f3f0ff 100%);
+  /* Faint school doodles over a soft gradient. */
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='340' viewBox='0 0 300 340'%3E%3Cpolygon points='40.0,26.0 43.7,34.9 53.3,35.7 46.0,41.9 48.2,51.3 40.0,46.3 31.8,51.3 34.0,41.9 26.7,35.7 36.3,34.9' fill='%23facc15' opacity='0.35' stroke-linejoin='round'/%3E%3Ctext x='190' y='60' font-family='Arial' font-weight='700' font-size='34' fill='%233b82f6' opacity='0.16'%3E%2B%3C/text%3E%3Ctext x='120' y='150' font-family='Arial' font-weight='700' font-size='30' fill='%23f7931e' opacity='0.18'%3E%3F%3C/text%3E%3Ccircle cx='250' cy='170' r='12' fill='none' stroke='%2322a35a' stroke-width='4' opacity='0.18'/%3E%3Ctext x='30' y='230' font-family='Arial' font-weight='700' font-size='30' fill='%238b5cf6' opacity='0.16'%3E%C3%B7%3C/text%3E%3Cpath d='M200 239C201.65 248.35 201.65 248.35 211 250C201.65 251.65 201.65 251.65 200 261C198.35 251.65 198.35 251.65 189 250C198.35 248.35 198.35 248.35 200 239z' fill='%23ec4899' opacity='0.22'/%3E%3Cpath d='M95 270l10 10 18-22' fill='none' stroke='%2322a35a' stroke-width='5' stroke-linecap='round' stroke-linejoin='round' opacity='0.2'/%3E%3Ctext x='240' y='300' font-family='Arial' font-weight='700' font-size='26' fill='%233b82f6' opacity='0.15'%3EA%3C/text%3E%3Ctext x='150' y='320' font-family='Arial' font-weight='700' font-size='26' fill='%23f7931e' opacity='0.16'%3E%C3%97%3C/text%3E%3Cpolygon points='70.0,321.0 72.4,326.7 78.6,327.2 73.9,331.3 75.3,337.3 70.0,334.1 64.7,337.3 66.1,331.3 61.4,327.2 67.6,326.7' fill='%233b82f6' opacity='0.18' stroke-linejoin='round'/%3E%3C/svg%3E") center top / 300px 340px repeat,
+    radial-gradient(circle at 0% 40%, rgba(255, 212, 59, 0.22), transparent 35%),
+    radial-gradient(circle at 100% 60%, rgba(167, 139, 250, 0.22), transparent 35%),
+    linear-gradient(180deg, #dcecff 0%, #eef5ff 40%, #f3f0ff 100%);
 }
 .qm h1,
 .qm h2 {
@@ -47,8 +52,12 @@
   position: relative;
   padding: 14px 16px 0;
   background:
-    url("./art/sky.webp") center bottom / cover no-repeat,
-    linear-gradient(180deg, #1f7cf4, #63c7fd);
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='140' viewBox='0 0 260 140'%3E%3Cg fill='%23ffffff' opacity='0.9'%3E%3Ccircle cx='60' cy='90' r='46'/%3E%3Ccircle cx='110' cy='70' r='52'/%3E%3Ccircle cx='170' cy='80' r='44'/%3E%3Ccircle cx='210' cy='98' r='34'/%3E%3Ccircle cx='30' cy='110' r='30'/%3E%3Crect x='20' y='96' width='200' height='36' rx='18'/%3E%3C/g%3E%3C/svg%3E") left -30px top 70px / 190px auto no-repeat,
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='140' viewBox='0 0 260 140'%3E%3Cg fill='%23ffffff' opacity='0.9'%3E%3Ccircle cx='60' cy='90' r='46'/%3E%3Ccircle cx='110' cy='70' r='52'/%3E%3Ccircle cx='170' cy='80' r='44'/%3E%3Ccircle cx='210' cy='98' r='34'/%3E%3Ccircle cx='30' cy='110' r='30'/%3E%3Crect x='20' y='96' width='200' height='36' rx='18'/%3E%3C/g%3E%3C/svg%3E") right -50px top 150px / 230px auto no-repeat,
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='420' height='180' viewBox='0 0 420 180'%3E%3Ccircle cx='0' cy='106' r='60' fill='%23e3f3ff'/%3E%3Ccircle cx='70' cy='96' r='48' fill='%23e3f3ff'/%3E%3Ccircle cx='130' cy='76' r='58' fill='%23e3f3ff'/%3E%3Ccircle cx='200' cy='98' r='50' fill='%23e3f3ff'/%3E%3Ccircle cx='260' cy='82' r='62' fill='%23e3f3ff'/%3E%3Ccircle cx='330' cy='102' r='50' fill='%23e3f3ff'/%3E%3Ccircle cx='380' cy='90' r='46' fill='%23e3f3ff'/%3E%3Ccircle cx='420' cy='106' r='60' fill='%23e3f3ff'/%3E%3Ccircle cx='0' cy='128' r='60' fill='%23ffffff'/%3E%3Ccircle cx='70' cy='118' r='48' fill='%23ffffff'/%3E%3Ccircle cx='130' cy='98' r='58' fill='%23ffffff'/%3E%3Ccircle cx='200' cy='120' r='50' fill='%23ffffff'/%3E%3Ccircle cx='260' cy='104' r='62' fill='%23ffffff'/%3E%3Ccircle cx='330' cy='124' r='50' fill='%23ffffff'/%3E%3Ccircle cx='380' cy='112' r='46' fill='%23ffffff'/%3E%3Ccircle cx='420' cy='128' r='60' fill='%23ffffff'/%3E%3Crect y='150' width='420' height='30' fill='%23ffffff'/%3E%3C/svg%3E") left bottom 46px / 420px 180px repeat-x,
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='340' viewBox='0 0 300 340'%3E%3Cpolygon points='40.0,28.0 43.2,35.6 51.4,36.3 45.1,41.7 47.1,49.7 40.0,45.4 32.9,49.7 34.9,41.7 28.6,36.3 36.8,35.6' fill='%23ffffff' opacity='0.9' stroke-linejoin='round'/%3E%3Cpath d='M250 22C251.2 28.8 251.2 28.8 258 30C251.2 31.2 251.2 31.2 250 38C248.8 31.2 248.8 31.2 242 30C248.8 28.8 248.8 28.8 250 22z' fill='%23ffd43b' opacity='0.9'/%3E%3Cpolygon points='270.0,141.0 272.4,146.7 278.6,147.2 273.9,151.3 275.3,157.3 270.0,154.1 264.7,157.3 266.1,151.3 261.4,147.2 267.6,146.7' fill='%23cfe8ff' opacity='0.9' stroke-linejoin='round'/%3E%3Cpath d='M30 179C31.65 188.35 31.65 188.35 41 190C31.65 191.65 31.65 191.65 30 201C28.35 191.65 28.35 191.65 19 190C28.35 188.35 28.35 188.35 30 179z' fill='%23ffffff' opacity='0.9'/%3E%3Cpolygon points='150.0,241.0 152.4,246.7 158.6,247.2 153.9,251.3 155.3,257.3 150.0,254.1 144.7,257.3 146.1,251.3 141.4,247.2 147.6,246.7' fill='%23ffd43b' opacity='0.9' stroke-linejoin='round'/%3E%3Cpath d='M200 292C201.2 298.8 201.2 298.8 208 300C201.2 301.2 201.2 301.2 200 308C198.8 301.2 198.8 301.2 192 300C198.8 298.8 198.8 298.8 200 292z' fill='%23cfe8ff' opacity='0.9'/%3E%3Cpolygon points='90.0,308.0 93.2,315.6 101.4,316.3 95.1,321.7 97.1,329.7 90.0,325.4 82.9,329.7 84.9,321.7 78.6,316.3 86.8,315.6' fill='%23ffffff' opacity='0.9' stroke-linejoin='round'/%3E%3Cpath d='M140 102C141.2 108.8 141.2 108.8 148 110C141.2 111.2 141.2 111.2 140 118C138.8 111.2 138.8 111.2 132 110C138.8 108.8 138.8 108.8 140 102z' fill='%23ffd43b' opacity='0.9'/%3E%3Cpolygon points='210.0,201.0 212.4,206.7 218.6,207.2 213.9,211.3 215.3,217.3 210.0,214.1 204.7,217.3 206.1,211.3 201.4,207.2 207.6,206.7' fill='%23cfe8ff' opacity='0.9' stroke-linejoin='round'/%3E%3Cpath d='M60 99C61.65 108.35 61.65 108.35 71 110C61.65 111.65 61.65 111.65 60 121C58.35 111.65 58.35 111.65 49 110C58.35 108.35 58.35 108.35 60 99z' fill='%23ffffff' opacity='0.9'/%3E%3C/svg%3E") center top / 300px 340px repeat,
+    radial-gradient(circle at 50% 18%, rgba(255, 255, 255, 0.35), transparent 50%),
+    linear-gradient(180deg, #1673f2 0%, #46b4fb 55%, #a9e0fd 100%);
   overflow: hidden;
 }
 .qm-hero::after {
@@ -83,8 +92,9 @@
 .qm h1 {
   font-family: var(--brand);
   font-weight: 700;
-  font-size: clamp(34px, 10vw, 60px);
+  font-size: clamp(30px, 10vw, 60px);
   line-height: 1;
+  white-space: nowrap;
   color: #fff;
   -webkit-text-stroke: 1.5px var(--navy);
   paint-order: stroke fill;
@@ -273,10 +283,6 @@
   width: 22px;
   height: 22px;
 }
-.qm .qm-pill.purple {
-  background: linear-gradient(180deg, #a26bff, #7c3aed);
-  box-shadow: 0 4px 0 #4c1d95;
-}
 
 /* Feature tiles */
 .qm-features {
@@ -316,109 +322,6 @@
 .qm-feature.green { background: linear-gradient(180deg, #e3f8e8, #b8ebc5); }
 .qm-feature.pink { background: linear-gradient(180deg, #ffe6f0, #ffc2da); }
 
-/* Sample question */
-.qm-try {
-  max-width: 620px;
-  margin: 0 auto;
-}
-.qm-paper {
-  position: relative;
-  padding: 18px 16px 16px;
-  border-radius: 24px;
-  background: #fff;
-  border: 3px solid #e4d8ff;
-  box-shadow: 0 14px 30px -18px rgba(76, 29, 149, 0.55);
-}
-.qm-paper-head {
-  display: flex;
-  justify-content: space-between;
-  font-size: 14px;
-  font-weight: 700;
-  color: #7c3aed;
-}
-.qm-q {
-  margin: 10px 0 14px;
-  font-size: 19px;
-  font-weight: 700;
-  color: var(--navy);
-}
-.qm-bubbles {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-}
-.qm .qm-bubble {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  min-height: 56px;
-  padding: 8px 10px;
-  border-radius: 16px;
-  border: 2px solid var(--line);
-  background: #f8fbff;
-  color: var(--text);
-  font-size: 20px;
-  font-weight: 700;
-  text-align: left;
-}
-.qm .qm-bubble:active:not(:disabled) {
-  transform: scale(0.96);
-}
-.qm .qm-bubble:disabled {
-  cursor: default;
-}
-.qm-bubble i {
-  flex: 0 0 34px;
-  height: 34px;
-  border-radius: 50%;
-  display: grid;
-  place-items: center;
-  font-style: normal;
-  font-size: 15px;
-  color: #fff;
-  background: #3b82f6;
-}
-.qm-bubble:nth-child(2) i { background: #22a35a; }
-.qm-bubble:nth-child(3) i { background: #f7931e; }
-.qm-bubble:nth-child(4) i { background: #8b5cf6; }
-.qm .qm-bubble.right {
-  border-color: var(--leaf);
-  background: #ecfaf2;
-}
-.qm .qm-bubble.wrong {
-  border-color: var(--red);
-  background: #fdeef0;
-  animation: qm-shake 0.4s;
-}
-.qm-burst {
-  position: absolute;
-  left: 50%;
-  top: 45%;
-  z-index: 2;
-  pointer-events: none;
-}
-/* Each star flies outward along its own --a angle. */
-.qm-burst span {
-  position: absolute;
-  font-size: 26px;
-  color: var(--orange);
-  opacity: 0;
-  animation: qm-burst 0.9s ease-out;
-}
-.qm-burst span:nth-child(odd) {
-  color: #7c3aed;
-}
-.qm-feedback {
-  min-height: 46px;
-  margin: 12px 0 4px;
-  font-size: 16px;
-}
-.qm-tick {
-  color: var(--leaf);
-  font-size: 24px;
-  line-height: 0;
-}
-
 /* Shared orange button */
 .qm .qm-cta {
   width: 100%;
@@ -435,9 +338,6 @@
 .qm .qm-cta:active {
   transform: translateY(4px);
   box-shadow: 0 1px 0 #c25e00;
-}
-.qm .qm-full {
-  margin-top: 4px;
 }
 
 /* "Be a Quiz Champion" meadow with a wooden sign */
@@ -684,22 +584,23 @@
 @keyframes qm-pop-in {
   from { opacity: 0; transform: scale(0.6); }
 }
-@keyframes qm-shake {
-  20%, 60% { transform: translateX(-6px); }
-  40%, 80% { transform: translateX(6px); }
-}
-@keyframes qm-burst {
-  0% { opacity: 1; transform: rotate(var(--a)) translateY(0) scale(0.4); }
-  100% { opacity: 0; transform: rotate(var(--a)) translateY(-130px) scale(1.1); }
-}
 
 /* Very small phones */
 @media (max-width: 359px) {
+  .qm-logo {
+    width: 60px;
+    height: 60px;
+    border-radius: 18px;
+  }
+  .qm-logo svg {
+    width: 52px;
+    height: 52px;
+  }
+  .qm h1 {
+    font-size: 28px;
+  }
   .qm-features {
     grid-template-columns: repeat(2, 1fr);
-  }
-  .qm-bubbles {
-    grid-template-columns: 1fr;
   }
   .qm .qm-school {
     display: none;

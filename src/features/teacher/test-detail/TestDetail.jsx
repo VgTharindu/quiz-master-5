@@ -3,6 +3,7 @@ import { sb } from "@/lib/supabase";
 import TopBar from "@/components/TopBar";
 import Tabs from "@/components/Tabs";
 import BackButton from "@/components/BackButton";
+import RetryMessage from "@/components/RetryMessage";
 import StatusTag from "@/components/StatusTag";
 import { ENDED, LIVE, UPCOMING, getTestStatus } from "@/constants/testStatus";
 import { formatDateTime } from "@/utils/format";
@@ -20,25 +21,30 @@ export default function TestDetail({ test: initialTest, initialTab, back, onOpen
   const [questions, setQuestions] = useState([]);
   const [attempts, setAttempts] = useState([]);
   const [panel, setPanel] = useState(null); // "edit" | "republish" | null
+  const [loadError, setLoadError] = useState(false);
   const coinMap = useCoinBoard(test.grade);
 
+  // On failure the previous data is kept and a retry message is shown,
+  // instead of an empty list that looks like "nobody took the test".
   const loadQuestions = () =>
     sb
       .from("questions")
       .select("*")
       .eq("test_id", test.id)
       .order("pos")
-      .then(({ data }) => setQuestions(data || []));
+      .then(({ data, error }) => (error ? setLoadError(true) : setQuestions(data || [])));
   const loadAttempts = () =>
     sb
       .from("attempts")
       .select("*")
       .eq("test_id", test.id)
-      .then(({ data }) => setAttempts(data || []));
-  useEffect(() => {
+      .then(({ data, error }) => (error ? setLoadError(true) : setAttempts(data || [])));
+  const reload = () => {
+    setLoadError(false);
     loadQuestions();
     loadAttempts();
-  }, []);
+  };
+  useEffect(reload, []);
 
   const report = buildTestReport(test, questions, attempts, coinMap);
 
@@ -119,7 +125,8 @@ export default function TestDetail({ test: initialTest, initialTab, back, onOpen
             loadAttempts(); // fetch fresh results on every tab switch
           }}
         />
-        {tab === 0 && (
+        {loadError && <RetryMessage onRetry={reload} />}
+        {!loadError && tab === 0 && (
           <QuestionsTab
             test={test}
             status={status}
@@ -129,8 +136,8 @@ export default function TestDetail({ test: initialTest, initialTab, back, onOpen
             onTestDeleted={back}
           />
         )}
-        {tab === 1 && <ResultsTab report={report} />}
-        {tab === 2 && <AnalysisTab report={report} />}
+        {!loadError && tab === 1 && <ResultsTab report={report} />}
+        {!loadError && tab === 2 && <AnalysisTab report={report} />}
       </div>
     </div>
   );

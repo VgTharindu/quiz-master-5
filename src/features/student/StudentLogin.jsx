@@ -62,9 +62,11 @@ export default function StudentLogin({ done, exit }) {
                     <CheckBadge />
                   </span>
                 )}
-                <b>{g}</b>
-                <span>වසර</span>
                 {GRADE_STYLE[g]?.icon}
+                <span className="st-grade-label">
+                  <b>{g}</b>
+                  <span>වසර</span>
+                </span>
               </button>
             ))}
           </div>

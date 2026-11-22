@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { rpc } from "@/lib/rpc";
 import Loading from "@/components/Loading";
 import RetryMessage from "@/components/RetryMessage";
+import { useBackHandler } from "@/hooks/useBackHandler";
 import { useTicker } from "@/hooks/useTicker";
 import { formatMinSec } from "@/utils/format";
 import { loadPendingAnswers, useAnswerSaver } from "./useAnswerSaver";
@@ -21,6 +22,7 @@ export default function TestRunner({ aid, done }) {
   // { [questionId]: { a: chosen option index, s: seconds spent } }
   const [ans, setAns] = useState({});
   const [msg, setMsg] = useState("");
+  const [backNote, setBackNote] = useState(false);
   const [loadError, setLoadError] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState(false);
@@ -50,6 +52,13 @@ export default function TestRunner({ aid, done }) {
     });
   };
   useEffect(loadQuestions, [aid]);
+  // The back button must not drop a child out of a running test.
+  useBackHandler(true, () => setBackNote(true), 2);
+  useEffect(() => {
+    if (!backNote) return;
+    const t = setTimeout(() => setBackNote(false), 3000);
+    return () => clearTimeout(t);
+  }, [backNote]);
   useEffect(() => preloadArt([...QUESTION_PALS, "owl-graduate"]), []);
 
   const q = data?.qs[i],
@@ -177,6 +186,7 @@ export default function TestRunner({ aid, done }) {
           </div>
         )}
         {msg && <div className="st-alert">{msg}</div>}
+        {backNote && !msg && <div className="st-alert">පරීක්ෂණය අවසන් කර "ඉදිරිපත් කරන්න" ඔබන්න.</div>}
         <div className="st-question with-pet">
           <span className="st-question-pet">
             <Art name={QUESTION_PALS[i % QUESTION_PALS.length]} size={70} fallback={<PeekingCat size={78} />} />

@@ -5,7 +5,7 @@ import PdfButton from "@/components/PdfButton";
 import { MONTHS } from "@/utils/format";
 import { calcScore } from "@/utils/score";
 import { exportExcel } from "@/utils/excel";
-import { coinsOf, fetchMonthTests, fetchTestsData, nameKey } from "./reports/reportData";
+import { coinsLoading, coinsOf, fetchMonthTests, fetchTestsData, nameKey } from "./reports/reportData";
 import { useCoinBoard } from "./reports/useCoinBoard";
 import { MonthlyAverageSheet } from "./reports/sheets";
 import CoinValue from "./reports/CoinValue";
@@ -15,9 +15,21 @@ export default function MonthlyReport() {
   const [grade, setGrade] = useState(5);
   const [period, setPeriod] = useState(currentMonth);
   const [result, setResult] = useState(null); // { rows, grade, year, month }
+  const [loading, setLoading] = useState(false);
   const coinMap = useCoinBoard(grade);
 
   async function load() {
+    setLoading(true);
+    try {
+      await buildList();
+    } catch {
+      alert("දත්ත ලබාගත නොහැකි විය. Internet පරීක්ෂා කර නැවත උත්සාහ කරන්න.");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function buildList() {
     const tests = await fetchMonthTests({ grade, ...period });
     if (!tests.length) return setResult({ rows: [], grade, ...period });
     const { questions, attempts } = await fetchTestsData(tests.map((t) => t.id));
@@ -50,8 +62,8 @@ export default function MonthlyReport() {
           මාසය
           <MonthPicker {...period} onChange={setPeriod} />
         </label>
-        <button style={{ width: "100%" }} onClick={load}>
-          ලැයිස්තුව ගන්න
+        <button style={{ width: "100%" }} disabled={loading} onClick={load}>
+          {loading ? "රැඳී සිටින්න…" : "ලැයිස්තුව ගන්න"}
         </button>
       </div>
       {result &&
@@ -61,6 +73,7 @@ export default function MonthlyReport() {
           <>
             <div className="t-actions">
               <PdfButton
+                waiting={coinsLoading(rows) ? "Coins ගණන් කරමින්…" : ""}
                 fileName={`Monthly_Grade${result.grade}_${result.year}-${String(result.month + 1).padStart(2, "0")}`}
                 render={() => <MonthlyAverageSheet {...result} rows={rows} />}
               />
@@ -74,7 +87,7 @@ export default function MonthlyReport() {
                       "සහභාගී වූ පරීක්ෂණ": r.attended,
                       "මුළු පරීක්ෂණ": r.total,
                       "සාමාන්‍ය ලකුණු": r.avg,
-                      "රන් කාසි": r.coins ?? "",
+                      Coins: r.coins ?? "",
                     })),
                     `${MONTHS[result.month]}_${result.year}_${result.grade}වසර`,
                   )
