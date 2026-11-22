@@ -1,50 +1,49 @@
 import { formatCountdown, formatDateTime } from "@/utils/format";
 import { ENDED, LIVE, UPCOMING, getTestStatus } from "@/constants/testStatus";
+import { BookIcon, CalendarIcon, ChecklistIcon, ClockIcon, MedalIcon, TrophyIcon } from "./ui/icons";
 
-export default function StudentTestCard({ test, now, onOpen }) {
+const TILES = [
+  ["yellow", TrophyIcon],
+  ["pink", MedalIcon],
+  ["green", ChecklistIcon],
+  ["blue", BookIcon],
+];
+
+export default function StudentTestCard({ test, now, index = 0, onOpen }) {
   const start = new Date(test.start_at),
     end = new Date(test.end_at),
     status = getTestStatus(test, now);
+  const [tone, Icon] = TILES[index % TILES.length];
   return (
-    <div className={"card st" + status}>
-      <b style={{ fontSize: 19 }}>{test.name}</b>
-      <br />
-      <small>
-        {formatDateTime(start)} සිට {formatDateTime(end)} දක්වා
-      </small>
-      <br />
-      {status === UPCOMING && (
-        <span className="tag" style={{ background: "#ca8a04" }}>
-          ⏳ ආරම්භ වීමට: {formatCountdown((start - now) / 1000)}
-        </span>
-      )}
-      {status === LIVE && (
-        <>
-          <span className="tag" style={{ background: "#16a34a" }}>
-            ● දැන් පවතී
-          </span>
-          <br />
-          <span className="tag" style={{ background: "#1d4ed8", marginTop: 6 }}>
-            අවසන් වීමට: {formatCountdown((end - now) / 1000)}
-          </span>
-          <button
-            className="g"
-            style={{ marginTop: 10, width: "100%" }}
-            onClick={() => onOpen(test, "test")}
-          >
-            පරීක්ෂණය ආරම්භ කරන්න ▶
+    <article className={"st-test" + (status === LIVE ? " live" : "")}>
+      <div className={"st-test-tile " + tone}>
+        <Icon size={50} />
+      </div>
+      <div className="st-test-body">
+        <h3>{test.name}</h3>
+        <div className="st-test-when">
+          <CalendarIcon /> {formatDateTime(start)} සිට
+        </div>
+        <div className="st-test-when">
+          <ClockIcon /> {formatDateTime(end)} දක්වා
+        </div>
+        {status === UPCOMING && (
+          <span className="st-chip amber">⏳ ආරම්භ වීමට {formatCountdown((start - now) / 1000)}</span>
+        )}
+        {status === LIVE && (
+          <>
+            <span className="st-chip green">● දැන් පවතී · අවසන් වීමට {formatCountdown((end - now) / 1000)}</span>
+            <button className="st-pill green" onClick={() => onOpen(test, "test")}>
+              ආරම්භ කරන්න ▶
+            </button>
+          </>
+        )}
+        {status === ENDED && (
+          <button className="st-pill blue" onClick={() => onOpen(test, "result")}>
+            ප්‍රතිඵල බලන්න
           </button>
-        </>
-      )}
-      {status === ENDED && (
-        <button
-          className="w"
-          style={{ marginTop: 8, width: "100%" }}
-          onClick={() => onOpen(test, "result")}
-        >
-          ප්‍රතිඵල බලන්න
-        </button>
-      )}
-    </div>
+        )}
+      </div>
+    </article>
   );
 }

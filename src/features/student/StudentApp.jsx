@@ -4,8 +4,17 @@ import StudentHome from "./StudentHome";
 import TestRunner from "./TestRunner";
 import ResultView from "./ResultView";
 import { clearStudent, loadStudent, saveStudent } from "./studentStorage";
+import "./student.css";
 
 export default function StudentApp({ exit }) {
+  return (
+    <div className="st-app">
+      <StudentScreens exit={exit} />
+    </div>
+  );
+}
+
+function StudentScreens({ exit }) {
   const [me, setMe] = useState(loadStudent);
   // view.page = "home" | "test" | "result", view.aid = attempt id
   const [view, setView] = useState({ page: "home" });
