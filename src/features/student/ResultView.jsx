@@ -53,7 +53,8 @@ export default function ResultView({ me, aid, back }) {
   };
   useEffect(load, [aid]);
 
-  const earned = result ? countCorrect(result.items) : 0;
+  // Newer databases also send correct_count; older ones only the item list.
+  const earned = result ? result.correct_count ?? countCorrect(result.items) : 0;
 
   useEffect(() => {
     if (!result) return;

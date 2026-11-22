@@ -35,6 +35,7 @@ export function buildTestReport(test, questions, attempts, coinMap = null) {
         sec,
         perQ: sec / qCount,
         coins: coinsOf(coinMap, a.student),
+        left: a.left_count ?? 0, // times the child switched away from the test screen
       };
     })
     .sort((a, b) => b.score - a.score || a.sec - b.sec);

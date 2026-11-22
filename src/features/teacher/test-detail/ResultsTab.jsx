@@ -20,6 +20,7 @@ export default function ResultsTab({ report }) {
         "මුළු කාලය (තත්පර)": Math.round(r.sec),
         "ප්‍රශ්නයකට සාමාන්‍ය (තත්පර)": Math.round(r.perQ),
         Coins: r.coins ?? "",
+        "වෙනත් app වලට ගිය වාර": r.left,
       })),
       test.name,
     );
@@ -46,6 +47,7 @@ export default function ResultsTab({ report }) {
               </span>
               <br />
               <CoinValue value={r.coins} />
+              {r.left > 0 && <span className="left-flag"> · 🚪 වෙනත් app වලට {r.left} වතාවක්</span>}
             </span>
             <span className="rank-score">
               {r.score}/{totalMarks}
