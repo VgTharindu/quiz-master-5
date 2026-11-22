@@ -76,3 +76,8 @@ $$;
 -- Teacher only: students should not be able to list everyone's names.
 revoke execute on function coin_board(int) from public, anon;
 grant execute on function coin_board(int) to authenticated;
+
+-- Security hardening: after creating the teacher's login in Authentication -> Users,
+-- run migrations/004_security.sql (put the teacher's email in place of TEACHER_EMAIL)
+-- and turn off "Allow new users to sign up". Until then any signed-up user could read
+-- and change every table.

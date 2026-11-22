@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { isNetworkError, rpc } from "@/lib/rpc";
+import { deviceKey } from "@/lib/deviceKey";
 import { useTicker } from "@/hooks/useTicker";
 import StudentTestCard from "./StudentTestCard";
 import StudentHeader from "./ui/StudentHeader";
@@ -67,18 +68,13 @@ export default function StudentHome({ me, go, change, exit }) {
   async function open(test, page) {
     if (opening.current) return; // ignore a second tap while the first is still loading
     opening.current = true;
-    const res = await rpc("start_attempt", {
-      tid: test.id,
-      nm: me.name,
-      g: me.grade,
-    });
+    const params = { tid: test.id, nm: me.name, g: me.grade };
+    let res = await rpc("start_attempt", { ...params, dk: deviceKey() });
+    // Database not updated with migrations/004 yet: call the older version without the device key.
+    if (res.error?.code === "PGRST202") res = await rpc("start_attempt", params);
     opening.current = false;
     if (!res.error) return go({ page, aid: res.data });
-    alert(
-      isNetworkError(res)
-        ? "සම්බන්ධතාවය දුර්වලයි. Internet පරීක්ෂා කර නැවත උත්සාහ කරන්න."
-        : "ඔබ මෙම පරීක්ෂණයට සහභාගී වී නැත",
-    );
+    alert(startError(res));
   }
 
   return (
@@ -132,6 +128,15 @@ export default function StudentHome({ me, go, change, exit }) {
       <CheerBanner />
     </div>
   );
+}
+
+function startError(res) {
+  if (isNetworkError(res)) return "සම්බන්ධතාවය දුර්වලයි. Internet පරීක්ෂා කර නැවත උත්සාහ කරන්න.";
+  const msg = res.error?.message || "";
+  if (msg.includes("taken"))
+    return "මේ නමින් වෙනත් phone එකකින් දැනටමත් පරීක්ෂණය කරමින් ඉන්නවා. ඔයා පටන් ගත්ත phone එකෙන්ම කරන්න, නැත්නම් සර්ට කියන්න.";
+  if (msg.includes("bad name")) return "නම නිවැරදිව ලියන්න (අකුරු 2ත් 60ත් අතර).";
+  return "ඔබ මෙම පරීක්ෂණයට සහභාගී වී නැත";
 }
 
 const cacheKey = (grade) => "qm_tests_" + grade;

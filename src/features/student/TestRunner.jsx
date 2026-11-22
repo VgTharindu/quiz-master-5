@@ -23,6 +23,7 @@ export default function TestRunner({ aid, done }) {
   const [ans, setAns] = useState({});
   const [msg, setMsg] = useState("");
   const [backNote, setBackNote] = useState(false);
+  const [leftNote, setLeftNote] = useState(false);
   const [loadError, setLoadError] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState(false);
@@ -59,6 +60,40 @@ export default function TestRunner({ aid, done }) {
     const t = setTimeout(() => setBackNote(false), 3000);
     return () => clearTimeout(t);
   }, [backNote]);
+
+  // Keep the screen on during the test, so an automatic screen lock is not counted as leaving.
+  useEffect(() => {
+    let lock = null;
+    const request = () =>
+      navigator.wakeLock
+        ?.request("screen")
+        .then((l) => (lock = l))
+        .catch(() => {});
+    request();
+    // The browser drops the lock when the page is hidden; take it again on return.
+    const onVisible = () => !document.hidden && request();
+    document.addEventListener("visibilitychange", onVisible);
+    return () => {
+      document.removeEventListener("visibilitychange", onVisible);
+      lock?.release().catch(() => {});
+    };
+  }, []);
+
+  // Switching to another app or tab (for example to ask an AI) is reported to the teacher.
+  useEffect(() => {
+    const onVisibility = () => {
+      if (!document.hidden || finished.current) return;
+      rpc("note_leave", { aid }, { retries: 2 }); // best effort; older databases just ignore it
+      setLeftNote(true);
+    };
+    document.addEventListener("visibilitychange", onVisibility);
+    return () => document.removeEventListener("visibilitychange", onVisibility);
+  }, [aid]);
+  useEffect(() => {
+    if (!leftNote) return;
+    const t = setTimeout(() => setLeftNote(false), 5000);
+    return () => clearTimeout(t);
+  }, [leftNote]);
   useEffect(() => preloadArt([...QUESTION_PALS, "owl-graduate"]), []);
 
   const q = data?.qs[i],
@@ -187,6 +222,9 @@ export default function TestRunner({ aid, done }) {
         )}
         {msg && <div className="st-alert">{msg}</div>}
         {backNote && !msg && <div className="st-alert">පරීක්ෂණය අවසන් කර "ඉදිරිපත් කරන්න" ඔබන්න.</div>}
+        {leftNote && !msg && !backNote && (
+          <div className="st-alert">පරීක්ෂණය අතරතුර වෙනත් app එකකට ගිය බව සර්ට පෙනෙනවා. ඔබේම දැනුමෙන් උත්තර දෙන්න!</div>
+        )}
         <div className="st-question with-pet">
           <span className="st-question-pet">
             <Art name={QUESTION_PALS[i % QUESTION_PALS.length]} size={70} fallback={<PeekingCat size={78} />} />

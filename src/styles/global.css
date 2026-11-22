@@ -241,3 +241,23 @@ th {
   color: #c0262d;
   font-weight: 600;
 }
+
+/* Content protection (see useContentProtection): no selecting, long-press menus, dragging or printing. */
+.qm-protect body {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+.qm-protect input,
+.qm-protect textarea {
+  -webkit-user-select: text;
+  user-select: text;
+}
+.qm-protect img {
+  -webkit-user-drag: none;
+}
+@media print {
+  .qm-protect body {
+    display: none;
+  }
+}

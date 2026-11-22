@@ -15,6 +15,8 @@ const GRADE_STYLE = {
 export default function StudentLogin({ done, exit }) {
   const [name, setName] = useState("");
   const [grade, setGrade] = useState(0);
+  // Same rule as the server: 2 to 60 letters, extra spaces removed.
+  const clean = name.trim().replace(/\s+/g, " ");
   return (
     <div className="st-login st-bg sky">
       <Sparkles />
@@ -44,6 +46,7 @@ export default function StudentLogin({ done, exit }) {
               onChange={(e) => setName(e.target.value)}
               placeholder="සම්පූර්ණ නම ලියන්න"
               autoComplete="name"
+              maxLength={60}
             />
           </div>
 
@@ -74,8 +77,8 @@ export default function StudentLogin({ done, exit }) {
 
         <button
           className="st-cta orange"
-          disabled={!name.trim() || !grade}
-          onClick={() => done({ name: name.trim(), grade })}
+          disabled={clean.length < 2 || !grade}
+          onClick={() => done({ name: clean, grade })}
         >
           ඉදිරියට යන්න <Chevron />
         </button>
