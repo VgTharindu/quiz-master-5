@@ -12,7 +12,7 @@ const StudentHeader = forwardRef(function StudentHeader({ me, coins, onExit }, c
       <HeaderDoodles />
       <Sparkles />
       <div className="st-head-inner">
-        <Art name="kid-avatar" size={66} className="st-avatar-img" fallback={<KidAvatar size={66} />} />
+        <Art name="kid-avatar" size={66} fit="cover" position="center 12%" className="st-avatar-img" fallback={<KidAvatar size={66} />} />
         <div className="st-head-name">
           <b>{me.name}</b>
           <span>{me.grade} වසර</span>
