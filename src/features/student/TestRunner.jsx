@@ -9,9 +9,10 @@ import SaveStatus from "./SaveStatus";
 import { CloudEdge, HeaderDoodles, Sparkles } from "./ui/Decor";
 import { CheckBadge, Chevron, ClockIcon, StarMascot } from "./ui/icons";
 import { PeekingCat } from "./ui/illustrations";
-import Art from "./ui/Art";
+import Art, { preloadArt } from "./ui/Art";
 
 const OPTION_TONES = ["blue", "green", "orange", "purple"];
+const QUESTION_PALS = ["penguin", "panda", "frog", "elephant", "kitten-wink", "puppy-friendly", "duckling", "turtle"];
 
 export default function TestRunner({ aid, done }) {
   const [data, setData] = useState(null);
@@ -49,6 +50,7 @@ export default function TestRunner({ aid, done }) {
     });
   };
   useEffect(loadQuestions, [aid]);
+  useEffect(() => preloadArt([...QUESTION_PALS, "owl-graduate"]), []);
 
   const q = data?.qs[i],
     now = () => Date.now() + offset.current;
@@ -129,7 +131,7 @@ export default function TestRunner({ aid, done }) {
   if (submitting)
     return (
       <div className="st-page st-center">
-        <StarMascot size={110} />
+        <Art name="owl-graduate" size={120} fallback={<StarMascot size={110} />} />
         <h2>ඉදිරිපත් කරමින්…</h2>
         <SaveStatus status={saver.status} />
       </div>
@@ -177,7 +179,7 @@ export default function TestRunner({ aid, done }) {
         {msg && <div className="st-alert">{msg}</div>}
         <div className="st-question with-pet">
           <span className="st-question-pet">
-            <Art name="pencil-mascot" size={70} fallback={<PeekingCat size={78} />} />
+            <Art name={QUESTION_PALS[i % QUESTION_PALS.length]} size={70} fallback={<PeekingCat size={78} />} />
           </span>
           <span className="st-marks">ලකුණු {q.marks}</span>
           <h2>{q.body}</h2>

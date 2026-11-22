@@ -14,7 +14,10 @@ automatically instead of the drawn SVG. No code changes are needed.
 | `checklist.webp` | Checklist (test cards) | 256 × 256 |
 | `book.webp` | Book (test cards, grade 3 tile) | 256 × 256 |
 | `pencil-mascot.webp` | Mascot above each question, grade 4 tile | 256 × 256 |
-| `cat.webp`, `puppy.webp`, `bunny.webp` | Pets on the meadow | 300 × 300 |
+| `duckling.webp`, `bunny.webp`, `puppy.webp`, `cat.webp`, `turtle.webp` | Pets on the meadow | 300 × 300 |
+| `penguin.webp`, `panda.webp`, `frog.webp`, `elephant.webp`, `kitten-wink.webp`, `puppy-friendly.webp` | A different friend above each question (with `duckling` and `turtle`) | 300 × 300 |
+| `owl-graduate.webp` | Owl shown while a test is being submitted | 300 × 300 |
+| `frog.webp` / `elephant.webp` | Friend on the result card (score 50%+ / below 50%) | 300 × 300 |
 
 - Use a **transparent background** (PNG or WebP with alpha).
 - `.webp`, `.png`, `.jpg` and `.svg` all work. Keep each file under ~60 KB so the app stays fast on slow networks.

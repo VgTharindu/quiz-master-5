@@ -921,3 +921,25 @@
   background: rgba(255, 255, 255, 0.82);
   color: var(--st-ink);
 }
+.st-meadow-pets {
+  gap: 4px;
+}
+.st-meadow-pets img {
+  flex: none;
+  max-width: none;
+  filter: drop-shadow(0 4px 3px rgba(30, 80, 20, 0.25));
+}
+.st-result-pal {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+.st-result-pal img {
+  max-width: none;
+}
+.st-meadow + .st-cheer .st-cheer-wave {
+  background: #5bd21b;
+}
+.st-center img {
+  margin: 0 auto;
+}
