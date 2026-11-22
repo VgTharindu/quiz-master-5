@@ -71,7 +71,7 @@ export default function StudentHome({ me, go, change, exit }) {
   }
 
   return (
-    <div>
+    <div className="st-bg aqua">
       <StudentHeader me={me} coins={coins} onExit={exit} />
       <div className="st-page">
         <div className="st-tabs" role="tablist">
