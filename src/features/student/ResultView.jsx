@@ -7,6 +7,7 @@ import CoinRain from "@/features/coins/CoinRain";
 import { readCachedCoins, useCoins, writeCachedCoins } from "@/features/coins/useCoins";
 import StudentHeader from "./ui/StudentHeader";
 import { CheerBanner } from "./ui/Decor";
+import { PetsMeadow } from "./ui/illustrations";
 import { MedalIcon, StarMascot, TrophyIcon } from "./ui/icons";
 
 const cheer = (pct) =>
@@ -109,6 +110,7 @@ export default function ResultView({ me, aid, back }) {
           මුල් පිටුවට
         </button>
       </div>
+      <PetsMeadow />
       <CheerBanner />
       {raining && (
         <CoinRain

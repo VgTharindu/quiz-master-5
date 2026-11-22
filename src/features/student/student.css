@@ -9,7 +9,14 @@
   --st-purple: #7c3aed;
   --st-round: "Fredoka", "Noto Sans Sinhala", sans-serif;
   min-height: 100vh;
-  background: linear-gradient(180deg, #e3efff 0%, var(--st-sky) 40%, #f6f9ff 100%);
+  /* Soft colour shades + a faint doodle pattern (books, stars, pencils, "?"). */
+  background:
+    radial-gradient(circle at 8% 22%, rgba(255, 212, 59, 0.28), transparent 28%),
+    radial-gradient(circle at 92% 38%, rgba(167, 139, 250, 0.26), transparent 32%),
+    radial-gradient(circle at 12% 72%, rgba(110, 231, 183, 0.24), transparent 30%),
+    radial-gradient(circle at 88% 88%, rgba(255, 143, 163, 0.22), transparent 30%),
+    url("data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20width=%22220%22%20height=%22220%22%20viewBox=%220%200%20220%20220%22%3E%3Cg%20fill=%22none%22%20stroke=%22%233B6FD8%22%20stroke-width=%223%22%20stroke-linecap=%22round%22%20stroke-linejoin=%22round%22%20opacity=%220.09%22%3E%3Cpath%20d=%22M20%2040c8-4%2016-4%2022%202v26c-6-6-14-6-22-2zM42%2042c6-6%2014-6%2022-2v26c-8-4-16-4-22%202%22/%3E%3Cpath%20d=%22M160%2030l5%2010%2011%202-8%208%202%2011-10-5-10%205%202-11-8-8%2011-2z%22/%3E%3Cpath%20d=%22M100%20120c0-10%2016-10%2016%200%200%206-8%207-8%2014M108%20142v1%22/%3E%3Cpath%20d=%22M30%20160l26-26%207%207-26%2026-9%202z%22/%3E%3Cpath%20d=%22M170%20140v18M161%20149h18%22/%3E%3Cpath%20d=%22M120%2040h14M127%2033v0M127%2047v0%22/%3E%3Ccircle%20cx=%22190%22%20cy=%22200%22%20r=%226%22/%3E%3Cpath%20d=%22M70%20205l8-14%208%2014z%22/%3E%3C/g%3E%3C/svg%3E"),
+    linear-gradient(180deg, #dcebff 0%, var(--st-sky) 45%, #f5f1ff 100%);
   color: var(--st-ink);
   overflow-x: hidden;
 }
@@ -775,4 +782,56 @@
   .st-progress > div {
     transition: none;
   }
+}
+
+/* Illustrations: kids, pets and meadow */
+.st-meadow {
+  position: relative;
+  margin-top: 18px;
+}
+.st-meadow-hill {
+  display: block;
+  width: 100%;
+  height: 70px;
+}
+.st-meadow-pets {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 14px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  gap: 18px;
+}
+.st-meadow + .st-cheer {
+  margin-top: -4px;
+}
+.st-meadow + .st-cheer .st-cheer-wave path {
+  fill: #ffd43b;
+}
+.st-login-art {
+  flex-direction: column;
+  gap: 0;
+}
+.st-login-art .st-art-top {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: -6px;
+}
+.st-question.with-pet {
+  margin-top: 46px;
+}
+.st-question-pet {
+  position: absolute;
+  top: -50px;
+  left: 18px;
+}
+.st-empty.owl {
+  border-style: solid;
+  border-color: #d6e4ff;
+}
+.st-empty svg {
+  flex: none;
 }

@@ -4,7 +4,8 @@ import { useTicker } from "@/hooks/useTicker";
 import StudentTestCard from "./StudentTestCard";
 import StudentHeader from "./ui/StudentHeader";
 import { CheerBanner } from "./ui/Decor";
-import { CalendarCheckIcon, CheckBadge, StarMascot, TrophyIcon } from "./ui/icons";
+import { PetsMeadow, ReadingOwl } from "./ui/illustrations";
+import { CalendarCheckIcon, CheckBadge, TrophyIcon } from "./ui/icons";
 import { useCoinTotal } from "@/features/coins/useCoins";
 
 const TABS = [
@@ -92,8 +93,8 @@ export default function StudentHome({ me, go, change, exit }) {
           ))}
         </div>
         {!list.length && (
-          <div className="st-empty">
-            <StarMascot size={84} />
+          <div className="st-empty owl">
+            <ReadingOwl size={92} />
             <p>{tab ? "පසුගිය පරීක්ෂණ තවම නැහැ." : "දැනට පරීක්ෂණ නැහැ. සර් අලුත් පරීක්ෂණයක් දාපු ගමන් මෙතන පෙනෙයි!"}</p>
           </div>
         )}
@@ -104,6 +105,7 @@ export default function StudentHome({ me, go, change, exit }) {
           නම / පන්තිය වෙනස් කරන්න
         </button>
       </div>
+      <PetsMeadow />
       <CheerBanner />
     </div>
   );
