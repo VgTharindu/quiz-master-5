@@ -149,7 +149,7 @@ export default function TestRunner({ aid, done }) {
   const last = i === data.qs.length - 1,
     canBack = i > 0 && !q.seconds && !data.qs[i - 1].seconds;
   return (
-    <div>
+    <div className="st-bg purple">
       <header className="st-head st-test-head">
         <HeaderDoodles />
         <Sparkles />

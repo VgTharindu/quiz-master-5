@@ -862,3 +862,62 @@
 .st-login-art .st-art-top {
   margin-bottom: 4px;
 }
+
+/* Full-screen painted backgrounds. The base colour shows while the image loads. */
+.st-bg {
+  position: relative;
+  min-height: 100vh;
+  isolation: isolate;
+}
+.st-bg::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background-repeat: no-repeat;
+  background-position: center bottom;
+  background-size: cover;
+}
+.st-bg.sky::before {
+  background-color: #5dc3fd;
+  background-image: url("./art/bg/sky-clouds-stars.webp");
+}
+.st-bg.aqua::before {
+  background-color: #4cc3ea;
+  background-image: url("./art/bg/aqua-blue-waves.webp");
+}
+.st-bg.purple::before {
+  background-color: #a9b2fb;
+  background-image: url("./art/bg/dreamy-purple-clouds.webp");
+}
+.st-bg.gold::before {
+  background-color: #fde27a;
+  background-image: url("./art/bg/sunshine-golden-waves.webp");
+}
+.st-app .st-head {
+  background:
+    url("./art/bg/deep-blue-clouds.webp") center 30% / cover no-repeat,
+    linear-gradient(160deg, #4b8dfb 0%, #2f6ff0 45%, #1f55d6 100%);
+}
+.st-meadow {
+  background: url("./art/bg/green-hills.webp") center bottom / 100% auto no-repeat;
+}
+.st-meadow-hill {
+  visibility: hidden;
+}
+.st-bg .st-login-title h1 {
+  color: #fff;
+  text-shadow:
+    0 3px 0 var(--st-blue-dark),
+    0 6px 14px rgba(15, 40, 120, 0.35);
+}
+.st-bg .st-note,
+.st-bg .save-status {
+  width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.82);
+  color: var(--st-ink);
+}

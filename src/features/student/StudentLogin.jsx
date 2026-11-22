@@ -16,7 +16,7 @@ export default function StudentLogin({ done, exit }) {
   const [name, setName] = useState("");
   const [grade, setGrade] = useState(0);
   return (
-    <div className="st-login">
+    <div className="st-login st-bg sky">
       <Sparkles />
       <div className="st-page">
         <button className="st-back" onClick={exit}>

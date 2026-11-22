@@ -82,7 +82,7 @@ export default function ResultView({ me, aid, back }) {
   if (!result) return <Loading />;
   const pct = result.total ? Math.round((result.score * 100) / result.total) : 0;
   return (
-    <div>
+    <div className="st-bg gold">
       <StudentHeader ref={counterRef} me={me} coins={coins} />
       <div className="st-page">
         <div className="st-result">
