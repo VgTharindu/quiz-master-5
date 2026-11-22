@@ -1,11 +1,16 @@
 import { useEffect, useRef, useState } from "react";
 import { isNetworkError, rpc } from "@/lib/rpc";
-import TopBar from "@/components/TopBar";
-import Tabs from "@/components/Tabs";
 import { useTicker } from "@/hooks/useTicker";
 import StudentTestCard from "./StudentTestCard";
-import CoinCounter from "@/features/coins/CoinCounter";
+import StudentHeader from "./ui/StudentHeader";
+import { CheerBanner } from "./ui/Decor";
+import { CalendarCheckIcon, CheckBadge, StarMascot, TrophyIcon } from "./ui/icons";
 import { useCoinTotal } from "@/features/coins/useCoins";
+
+const TABS = [
+  ["දැන් සහ ඉදිරි පරීක්ෂණ", <TrophyIcon size={34} />],
+  ["පසුගිය පරීක්ෂණ", <CalendarCheckIcon size={34} />],
+];
 
 export default function StudentHome({ me, go, change, exit }) {
   // Stale-while-revalidate: show the last cached list immediately, then refresh in the background.
@@ -65,37 +70,41 @@ export default function StudentHome({ me, go, change, exit }) {
 
   return (
     <div>
-      <TopBar
-        left={`👤 ${me.name} · ${me.grade} වසර`}
-        right={
-          <span className="bar-right">
-            <CoinCounter value={coins} />
-            <span onClick={exit} style={{ fontSize: 14 }}>
-              ඉවත් වන්න
-            </span>
-          </span>
-        }
-      />
-      <div className="wrap">
-        <Tabs
-          items={["දැන් සහ ඉදිරි පරීක්ෂණ", "පසුගිය පරීක්ෂණ"]}
-          active={tab}
-          onChange={setTab}
-        />
+      <StudentHeader me={me} coins={coins} onExit={exit} />
+      <div className="st-page">
+        <div className="st-tabs" role="tablist">
+          {TABS.map(([label, icon], i) => (
+            <button
+              key={label}
+              role="tab"
+              aria-selected={tab === i}
+              className={"st-tab" + (tab === i ? " on" : "")}
+              onClick={() => setTab(i)}
+            >
+              {tab === i && (
+                <span className="st-tab-check">
+                  <CheckBadge size={26} />
+                </span>
+              )}
+              {icon}
+              <span>{label}</span>
+            </button>
+          ))}
+        </div>
         {!list.length && (
-          <p>{tab ? "පසුගිය පරීක්ෂණ නැත." : "දැනට පරීක්ෂණ නැත."}</p>
+          <div className="st-empty">
+            <StarMascot size={84} />
+            <p>{tab ? "පසුගිය පරීක්ෂණ තවම නැහැ." : "දැනට පරීක්ෂණ නැහැ. සර් අලුත් පරීක්ෂණයක් දාපු ගමන් මෙතන පෙනෙයි!"}</p>
+          </div>
         )}
-        {list.map((t) => (
-          <StudentTestCard key={t.id} test={t} now={now} onOpen={open} />
+        {list.map((t, i) => (
+          <StudentTestCard key={t.id} test={t} index={i} now={now} onOpen={open} />
         ))}
-        <button
-          className="w"
-          onClick={change}
-          style={{ width: "100%", marginTop: 10 }}
-        >
+        <button className="st-cta purple" onClick={change}>
           නම / පන්තිය වෙනස් කරන්න
         </button>
       </div>
+      <CheerBanner />
     </div>
   );
 }

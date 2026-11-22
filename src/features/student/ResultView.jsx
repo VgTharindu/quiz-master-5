@@ -2,11 +2,15 @@ import { useEffect, useRef, useState } from "react";
 import { isNetworkError, rpc } from "@/lib/rpc";
 import Loading from "@/components/Loading";
 import RetryMessage from "@/components/RetryMessage";
-import TopBar from "@/components/TopBar";
 import CoinIcon from "@/features/coins/CoinIcon";
-import CoinCounter from "@/features/coins/CoinCounter";
 import CoinRain from "@/features/coins/CoinRain";
 import { readCachedCoins, useCoins, writeCachedCoins } from "@/features/coins/useCoins";
+import StudentHeader from "./ui/StudentHeader";
+import { CheerBanner } from "./ui/Decor";
+import { MedalIcon, StarMascot, TrophyIcon } from "./ui/icons";
+
+const cheer = (pct) =>
+  pct >= 80 ? "නියමයි! 🎉" : pct >= 50 ? "හොඳයි! තව ටිකක් උත්සාහ කරන්න" : "අධෛර්යමත් නොවන්න, ඊළඟ පාර ජයගන්න!";
 
 const countCorrect = (items) =>
   items.filter((it) => it.mine !== null && +it.mine === it.correct).length;
@@ -74,34 +78,38 @@ export default function ResultView({ me, aid, back }) {
 
   if (netError) return <RetryMessage onRetry={load} />;
   if (!result) return <Loading />;
+  const pct = result.total ? Math.round((result.score * 100) / result.total) : 0;
   return (
     <div>
-      <TopBar left={`👤 ${me.name}`} right={<CoinCounter ref={counterRef} value={coins} />} />
-      <div className="wrap">
-        <h1>ඔබේ ප්‍රතිඵලය</h1>
-        <div className="card" style={{ textAlign: "center" }}>
-          <div className="tm" style={{ fontSize: 40 }}>
-            {result.score} / {result.total}
+      <StudentHeader ref={counterRef} me={me} coins={coins} />
+      <div className="st-page">
+        <div className="st-result">
+          <span className="st-result-trophy">{pct >= 50 ? <TrophyIcon size={84} /> : <StarMascot size={84} />}</span>
+          <h1>ඔබේ ප්‍රතිඵලය</h1>
+          <ScoreRing pct={pct} label={`${result.score} / ${result.total}`} />
+          <p className="st-result-cheer">{cheer(pct)}</p>
+          <span className="st-chip blue big">
+            <MedalIcon size={26} /> ස්ථානය {result.rank} (ළමුන් {result.count} න්)
+          </span>
+          <div>
+            {earned > 0 ? (
+              <span ref={badgeRef} className="coin-earned">
+                <CoinIcon size={28} /> +{earned} රන් කාසි
+              </span>
+            ) : (
+              <span className="coin-earned none">මේ පාර කාසි නැහැ. ඊළඟ පාර උත්සාහ කරන්න!</span>
+            )}
           </div>
-          🏆 ස්ථානය: {result.rank} (ළමුන් {result.count} න් අතරින්)
-          <br />
-          {earned > 0 ? (
-            <span ref={badgeRef} className="coin-earned">
-              <CoinIcon size={28} /> +{earned} රන් කාසි
-            </span>
-          ) : (
-            <span className="coin-earned none">
-              මේ පාර කාසි නැහැ. ඊළඟ පාර උත්සාහ කරන්න!
-            </span>
-          )}
         </div>
+        <h2 className="st-section">පිළිතුරු බලන්න</h2>
         {result.items.map((it, k) => (
           <ResultItem key={k} item={it} n={k + 1} />
         ))}
-        <button onClick={back} style={{ width: "100%" }}>
+        <button className="st-cta blue" onClick={back}>
           මුල් පිටුවට
         </button>
       </div>
+      <CheerBanner />
       {raining && (
         <CoinRain
           count={earned}
@@ -118,34 +126,52 @@ export default function ResultView({ me, aid, back }) {
   );
 }
 
+function ScoreRing({ pct, label }) {
+  const r = 52,
+    c = 2 * Math.PI * r;
+  const color = pct >= 80 ? "#22a35a" : pct >= 50 ? "#f7931e" : "#e5484d";
+  return (
+    <div className="st-ring">
+      <svg viewBox="0 0 120 120" width="150" height="150" aria-hidden="true">
+        <circle cx="60" cy="60" r={r} fill="none" stroke="#e7eeff" strokeWidth="12" />
+        <circle
+          cx="60"
+          cy="60"
+          r={r}
+          fill="none"
+          stroke={color}
+          strokeWidth="12"
+          strokeLinecap="round"
+          strokeDasharray={`${(c * pct) / 100} ${c}`}
+          transform="rotate(-90 60 60)"
+        />
+      </svg>
+      <div className="st-ring-label">
+        <b>{label}</b>
+        <span>{pct}%</span>
+      </div>
+    </div>
+  );
+}
+
 function ResultItem({ item, n }) {
   const mine = item.mine === null ? null : +item.mine,
     ok = mine === item.correct;
   return (
-    <div className="card">
-      <b>
-        {n}. {item.body}
-      </b>
-      {item.image_url && (
-        <img className="q" src={item.image_url} alt="" loading="lazy" />
-      )}
+    <div className={"st-review " + (mine === null ? "skip" : ok ? "right" : "wrong")}>
+      <div className="st-review-q">
+        <span className="st-review-n">{n}</span>
+        <b>{item.body}</b>
+      </div>
+      {item.image_url && <img className="q" src={item.image_url} alt="" loading="lazy" />}
       {item.options.map((o, j) => (
-        <div
-          key={j}
-          className={j === item.correct ? "ok" : j === mine ? "bad" : ""}
-          style={{
-            padding: "8px 12px",
-            borderRadius: 10,
-            border: "2px solid #e2e8f0",
-            margin: "6px 0",
-          }}
-        >
-          {j === mine ? (ok ? "✅ " : "❌ ") : ""}
+        <div key={j} className={"st-review-opt" + (j === item.correct ? " correct" : j === mine ? " mine" : "")}>
+          <span>{j === item.correct ? "✓" : j === mine ? "✗" : j + 1}</span>
           {o}
-          {j === item.correct && !ok ? " (නිවැරදි පිළිතුර)" : ""}
+          {j === item.correct && !ok ? <em> (නිවැරදි පිළිතුර)</em> : ""}
         </div>
       ))}
-      {mine === null && <span className="warn">පිළිතුරක් දී නැත</span>}
+      {mine === null && <p className="st-note">පිළිතුරක් දී නැත</p>}
     </div>
   );
 }

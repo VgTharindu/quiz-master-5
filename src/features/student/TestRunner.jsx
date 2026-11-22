@@ -1,12 +1,15 @@
 import { useEffect, useRef, useState } from "react";
 import { rpc } from "@/lib/rpc";
 import Loading from "@/components/Loading";
-import TopBar from "@/components/TopBar";
 import RetryMessage from "@/components/RetryMessage";
 import { useTicker } from "@/hooks/useTicker";
 import { formatMinSec } from "@/utils/format";
 import { loadPendingAnswers, useAnswerSaver } from "./useAnswerSaver";
 import SaveStatus from "./SaveStatus";
+import { CloudEdge, Sparkles } from "./ui/Decor";
+import { CheckBadge, Chevron, ClockIcon, StarMascot } from "./ui/icons";
+
+const OPTION_TONES = ["blue", "green", "orange", "purple"];
 
 export default function TestRunner({ aid, done }) {
   const [data, setData] = useState(null);
@@ -123,7 +126,8 @@ export default function TestRunner({ aid, done }) {
   if (!data) return <Loading />;
   if (submitting)
     return (
-      <div className="wrap" style={{ textAlign: "center", paddingTop: 40 }}>
+      <div className="st-page st-center">
+        <StarMascot size={110} />
         <h2>ඉදිරිපත් කරමින්…</h2>
         <SaveStatus status={saver.status} />
       </div>
@@ -144,61 +148,73 @@ export default function TestRunner({ aid, done }) {
     canBack = i > 0 && !q.seconds && !data.qs[i - 1].seconds;
   return (
     <div>
-      <TopBar
-        left={`ප්‍රශ්නය ${i + 1} / ${data.qs.length}`}
-        right={<span>මුළු කාලය: {formatMinSec(total)}</span>}
-      />
-      <div className="wrap">
+      <header className="st-head st-test-head">
+        <Sparkles />
+        <div className="st-head-inner">
+          <div className="st-q-count">
+            ප්‍රශ්නය <b>{i + 1}</b> / {data.qs.length}
+          </div>
+          <span className="st-time-pill">
+            <ClockIcon size={20} color="#1a4bae" /> {formatMinSec(total)}
+          </span>
+        </div>
+        <div className="st-progress" aria-hidden="true">
+          <div style={{ width: ((i + 1) * 100) / data.qs.length + "%" }} />
+        </div>
+        <CloudEdge />
+      </header>
+      <div className="st-page">
         <SaveStatus status={saver.status} />
         {left !== null && (
-          <div className={"tm " + (left < 10 ? "warn" : "")}>
-            ⏱ {Math.ceil(Math.max(0, left))} තත්පර
+          <div className={"st-q-timer" + (left < 10 ? " warn" : "")}>
+            <ClockIcon size={24} color={left < 10 ? "#dc2626" : "#e07b00"} />
+            {Math.ceil(Math.max(0, left))} තත්පර
           </div>
         )}
-        {msg && (
-          <div className="card warn">
-            <b>{msg}</b>
-          </div>
-        )}
-        <div className="card">
-          <h2 style={{ marginTop: 0 }}>{q.body}</h2>
-          {q.image_url && (
-            <img className="q" src={q.image_url} alt="" decoding="async" />
-          )}
-          <small>ලකුණු {q.marks}</small>
+        {msg && <div className="st-alert">{msg}</div>}
+        <div className="st-question">
+          <span className="st-marks">ලකුණු {q.marks}</span>
+          <h2>{q.body}</h2>
+          {q.image_url && <img className="q" src={q.image_url} alt="" decoding="async" />}
         </div>
-        {q.options.map((o, k) => (
-          <button
-            key={k}
-            disabled={!!msg}
-            className={"opt " + (ans[q.id]?.a === k ? "sel" : "")}
-            onClick={() => pick(k)}
-          >
-            {k + 1}. {o}
-          </button>
-        ))}
-        <div className="row" style={{ marginTop: 14 }}>
+        <div className="st-options">
+          {q.options.map((o, k) => {
+            const picked = ans[q.id]?.a === k;
+            return (
+              <button
+                key={k}
+                disabled={!!msg}
+                aria-pressed={picked}
+                className={`st-option ${OPTION_TONES[k % 4]}${picked ? " on" : ""}`}
+                onClick={() => pick(k)}
+              >
+                <span className="st-option-num">{k + 1}</span>
+                <span className="st-option-text">{o}</span>
+                {picked && <CheckBadge size={26} />}
+              </button>
+            );
+          })}
+        </div>
+        <div className="st-nav">
           {canBack && (
-            <button className="w" onClick={() => go(i - 1)}>
-              ◀ පෙර
+            <button className="st-cta white" onClick={() => go(i - 1)}>
+              <Chevron dir="left" /> පෙර
             </button>
           )}
           <button
-            className={last ? "g" : ""}
+            className={"st-cta " + (last ? "orange" : "blue")}
             disabled={!!msg}
-            onClick={() =>
-              last ? confirm("ඉදිරිපත් කරන්නද?") && finish() : go(i + 1)
-            }
+            onClick={() => (last ? confirm("ඉදිරිපත් කරන්නද?") && finish() : go(i + 1))}
           >
-            {last ? "ඉදිරිපත් කරන්න ✔" : "ඊළඟ ▶"}
+            {last ? "ඉදිරිපත් කරන්න ✔" : (
+              <>
+                ඊළඟ <Chevron />
+              </>
+            )}
           </button>
         </div>
         {q.seconds && (
-          <p>
-            <small>
-              මෙම ප්‍රශ්නයට කාල සීමාවක් ඇත. පසුව නැවත පැමිණිය නොහැක.
-            </small>
-          </p>
+          <p className="st-note">මෙම ප්‍රශ්නයට කාල සීමාවක් ඇත. පසුව නැවත පැමිණිය නොහැක.</p>
         )}
       </div>
     </div>
