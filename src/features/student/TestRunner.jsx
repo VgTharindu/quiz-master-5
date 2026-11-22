@@ -6,8 +6,10 @@ import { useTicker } from "@/hooks/useTicker";
 import { formatMinSec } from "@/utils/format";
 import { loadPendingAnswers, useAnswerSaver } from "./useAnswerSaver";
 import SaveStatus from "./SaveStatus";
-import { CloudEdge, Sparkles } from "./ui/Decor";
+import { CloudEdge, HeaderDoodles, Sparkles } from "./ui/Decor";
 import { CheckBadge, Chevron, ClockIcon, StarMascot } from "./ui/icons";
+import { PeekingCat } from "./ui/illustrations";
+import Art from "./ui/Art";
 
 const OPTION_TONES = ["blue", "green", "orange", "purple"];
 
@@ -149,6 +151,7 @@ export default function TestRunner({ aid, done }) {
   return (
     <div>
       <header className="st-head st-test-head">
+        <HeaderDoodles />
         <Sparkles />
         <div className="st-head-inner">
           <div className="st-q-count">
@@ -172,7 +175,10 @@ export default function TestRunner({ aid, done }) {
           </div>
         )}
         {msg && <div className="st-alert">{msg}</div>}
-        <div className="st-question">
+        <div className="st-question with-pet">
+          <span className="st-question-pet">
+            <Art name="cat" size={64} fallback={<PeekingCat size={78} />} />
+          </span>
           <span className="st-marks">ලකුණු {q.marks}</span>
           <h2>{q.body}</h2>
           {q.image_url && <img className="q" src={q.image_url} alt="" decoding="async" />}

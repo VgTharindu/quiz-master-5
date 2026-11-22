@@ -100,25 +100,6 @@ export function StarMascot({ size = 90 }) {
   );
 }
 
-// Generic cartoon student avatar.
-export function KidAvatar({ size = 64 }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 80 80" aria-hidden="true">
-      <circle cx="40" cy="40" r="38" fill="#DCEBFF" stroke="#fff" strokeWidth="4" />
-      <path d="M14 76c4-14 14-20 26-20s22 6 26 20z" fill="#fff" />
-      <path d="M33 56l7 8 7-8" fill="none" stroke="#2F64D6" strokeWidth="3" />
-      <path d="M38 60h4l2 12h-8z" fill="#2F64D6" />
-      <circle cx="40" cy="38" r="17" fill="#F6C59A" />
-      <path d="M22 36c0-14 9-20 18-20 11 0 19 7 18 19-3-6-7-9-11-9-2 3-7 5-12 5-5 0-9 2-13 5z" fill="#3A2A20" />
-      <ellipse cx="33.5" cy="40" rx="2.4" ry="3.2" fill="#2A1B12" />
-      <ellipse cx="46.5" cy="40" rx="2.4" ry="3.2" fill="#2A1B12" />
-      <path d="M34 47q6 6 12 0" fill="none" stroke="#B5442E" strokeWidth="2.5" strokeLinecap="round" />
-      <ellipse cx="29" cy="45" rx="3" ry="2" fill="#F59C8C" opacity=".6" />
-      <ellipse cx="51" cy="45" rx="3" ry="2" fill="#F59C8C" opacity=".6" />
-    </svg>
-  );
-}
-
 export function BulbIcon({ size = 56 }) {
   return (
     <svg width={size} height={size} viewBox="0 0 64 64" aria-hidden="true">
